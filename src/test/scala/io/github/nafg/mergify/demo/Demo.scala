@@ -11,8 +11,8 @@ object Demo extends App {
         Attr.Author :== "scala-steward",
         Attr.CheckSuccess :== "Travis CI - Pull Request"
       )(
-        Action.Merge(strict = Some(Json.fromBoolean(true))),
-        Action.DismissReviews(changesRequested = Some(Json.fromBoolean(false)))
+        Action.Merge(strict = true),
+        Action.DismissReviews(changesRequested = false)
       )
       .toYaml
 
