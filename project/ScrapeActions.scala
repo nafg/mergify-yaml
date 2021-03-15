@@ -64,7 +64,7 @@ object ScrapeActions {
             case "list of string" | "list of Template" => "Seq[String]"
             case "Boolean"                             => "Boolean"
             case "string" | "Template"                 => "String"
-            case other                                 => "Json /*" + other + "*/"
+            case other                                 => "ToJson /*" + other + "*/"
           }
 
           val (scalaTypeAndDefault, commentDefault) =

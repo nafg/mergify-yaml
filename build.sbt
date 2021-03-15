@@ -1,6 +1,7 @@
 ThisBuild / scalaVersion := "2.12.13"
 ThisBuild / scalacOptions += "-feature"
 ThisBuild / organization := "io.github.nafg.mergify"
+ThisBuild / version := "0.2.0"
 
 name := "mergify-writer"
 
