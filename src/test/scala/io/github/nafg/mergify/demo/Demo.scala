@@ -1,6 +1,5 @@
 package io.github.nafg.mergify.demo
 
-import io.circe.Json
 import io.github.nafg.mergify.dsl._
 
 
