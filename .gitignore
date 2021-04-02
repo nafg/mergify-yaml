@@ -2,3 +2,8 @@
 *.log
 target/
 .bsp/
+.idea/
+.bloop/
+.metals/
+metals.sbt
+.vscode/
