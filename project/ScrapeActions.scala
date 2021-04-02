@@ -1,4 +1,5 @@
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 
 import java.net.URL
 import scala.collection.JavaConverters._
@@ -11,9 +12,21 @@ import scala.concurrent.{Await, Future}
  * Scrape the available set of actions from the Mergify website
  */
 object ScrapeActions {
+  def getJsoupDocument(url: URL): Document = {
+    val urlString = url.toString
+    val doc = Jsoup.connect(urlString).followRedirects(true).get()
+    val canonical = doc.select("html > head > link[rel=canonical]").first()
+    if(canonical == null) doc
+    else {
+      val href = new URL(canonical.attr("href"))
+      if(href.equals(url)) doc
+      else getJsoupDocument(href)
+    }
+  }
+
   def run() = {
     val baseUrl = new URL("https://docs.mergify.io/actions/index.html")
-    val index = Jsoup.parse(baseUrl, 5000)
+    val index = getJsoupDocument(baseUrl)
 
     val actionPages =
       index.select("#actions > .use-cases a")
@@ -26,7 +39,7 @@ object ScrapeActions {
         Future.traverse(actionPages) { url =>
           Future {
             println("Scraping " + url)
-            val ret = Jsoup.parse(url, 5000)
+            val ret = getJsoupDocument(url)
             println("Finished " + url)
             ret
           }
