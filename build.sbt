@@ -9,7 +9,7 @@ libraryDependencies += "io.circe" %% "circe-yaml" % "0.13.1"
 libraryDependencies += "io.circe" %% "circe-derivation" % "0.13.0-M5"
 libraryDependencies += "com.propensive" %% "magnolia" % "0.17.0"
 libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value % Provided
-libraryDependencies += "com.lihaoyi" %% "requests" % "0.6.8"
+libraryDependencies += "com.lihaoyi" %% "requests" % "0.6.9"
 
 Compile / sourceGenerators += Def.task {
   val dir = (Compile / sourceManaged).value / "io/github/nafg/mergify"
