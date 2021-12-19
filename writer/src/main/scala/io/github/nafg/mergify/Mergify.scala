@@ -7,7 +7,7 @@ import io.circe.derivation.{deriveEncoder, renaming}
 case class Mergify(defaults: ActionSet = ActionSet(), pullRequestRules: Seq[PullRequestRule] = Nil) {
   def toYaml: String = Mergify.toYaml(this)
 
-  def withRule(name: String)(conditions: Condition*)(actions: Action*) =
+  def addRule(name: String)(conditions: Condition*)(actions: Action*) =
     copy(pullRequestRules = pullRequestRules :+ PullRequestRule(name, conditions, ActionSet(actions)))
 }
 
