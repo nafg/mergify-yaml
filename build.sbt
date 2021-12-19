@@ -1,5 +1,3 @@
-ThisBuild / crossScalaVersions := Seq("2.12.15", "2.13.7")
-ThisBuild / scalaVersion := (ThisBuild / crossScalaVersions).value.last
 ThisBuild / scalacOptions += "-feature"
 ThisBuild / organization := "io.github.nafg.mergify"
 
@@ -7,9 +5,16 @@ name := "mergify-writer"
 
 publish / skip := true
 
-val writer =
+crossScalaVersions := Nil
+
+val Scala212 = "2.12.15"
+val Scala213 = "2.13.7"
+
+lazy val writer =
   project
     .settings(
+      scalaVersion := Scala212,
+      crossScalaVersions := Seq(scalaVersion.value, Scala213),
       libraryDependencies += "io.circe" %% "circe-yaml" % "0.14.1",
       libraryDependencies += "io.circe" %% "circe-derivation" % "0.13.0-M5",
       libraryDependencies += "com.propensive" %% "magnolia" % "0.17.0",
@@ -38,4 +43,14 @@ val writer =
         )
         Seq(file)
       }.taskValue
+    )
+
+lazy val plugin =
+  project
+    .dependsOn(writer)
+    .settings(
+      sbtPlugin := true,
+      scalaVersion := Scala212,
+      addSbtPlugin("com.codecommit" % "sbt-github-actions" % "0.13.0"),
+      name := "sbt-mergify-github-actions"
     )
