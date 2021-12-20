@@ -20,7 +20,8 @@ lazy val writer =
       libraryDependencies += "io.circe" %% "circe-derivation" % "0.13.0-M5",
       libraryDependencies += "com.propensive" %% "magnolia" % "0.17.0",
       libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value % Provided,
-      libraryDependencies += "com.lihaoyi" %% "requests" % "0.7.0",
+      libraryDependencies += "com.lihaoyi" %% "requests" % "0.7.0" % Test,
+      libraryDependencies += "org.scalameta" %% "munit" % "0.7.29" % Test,
       Compile / sourceGenerators += Def.task {
         val dir = (Compile / sourceManaged).value / "io/github/nafg/mergify"
         val file = dir / "models.scala"
@@ -53,5 +54,6 @@ lazy val plugin =
       name := "sbt-mergify-github-actions",
       sbtPlugin := true,
       scalaVersion := Scala212,
-      addSbtPlugin("com.codecommit" % "sbt-github-actions" % "0.14.2")
+      addSbtPlugin("com.codecommit" % "sbt-github-actions" % "0.14.2"),
+      libraryDependencies += "org.scalameta" %% "munit" % "0.7.29" % Test
     )

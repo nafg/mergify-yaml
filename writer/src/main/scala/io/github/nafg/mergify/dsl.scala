@@ -26,8 +26,10 @@ object dsl {
     object < extends conditionBuilder(attribute, Operator.LesserThan)
   }
 
-  def mergify = Mergify()
+  def defaultMergify = Mergify().withDefaultQueueRule()
 
   val Attr = Attribute
   val Action = io.github.nafg.mergify.Action
+
+  def defaultQueueAction = Action.Queue(name = "default")
 }
