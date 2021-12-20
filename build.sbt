@@ -1,21 +1,19 @@
-ThisBuild / scalacOptions += "-feature"
-ThisBuild / organization := "io.github.nafg.mergify"
-
-name := "mergify-yaml"
-
-publish / skip := true
-
-crossScalaVersions := Nil
-
 val Scala212 = "2.12.15"
 val Scala213 = "2.13.7"
 
+ThisBuild / scalacOptions += "-feature"
+ThisBuild / organization := "io.github.nafg.mergify"
+
+
+name := "mergify-yaml"
+publish / skip := true
+
+
 lazy val writer =
-  project
+  projectMatrix
+    .jvmPlatform(List(Scala212, Scala213))
     .settings(
       name := "mergify-writer",
-      scalaVersion := Scala212,
-      crossScalaVersions := Seq(scalaVersion.value, Scala213),
       libraryDependencies += "io.circe" %% "circe-yaml" % "0.14.1",
       libraryDependencies += "io.circe" %% "circe-derivation" % "0.13.0-M5",
       libraryDependencies += "com.propensive" %% "magnolia" % "0.17.0",
@@ -48,12 +46,13 @@ lazy val writer =
     )
 
 lazy val plugin =
-  project
+  projectMatrix
+    .jvmPlatform(List(Scala212))
     .dependsOn(writer)
     .settings(
       name := "sbt-mergify-github-actions",
       sbtPlugin := true,
-      scalaVersion := Scala212,
+      crossScalaVersions := List(Scala212),
       addSbtPlugin("com.codecommit" % "sbt-github-actions" % "0.14.2"),
       libraryDependencies += "org.scalameta" %% "munit" % "0.7.29" % Test
     )
