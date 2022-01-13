@@ -13,7 +13,7 @@ class Test extends munit.FunSuite {
             name = "Build and Test",
             steps = Nil,
             oses = List("ubuntu-latest"),
-            scalas = List("2.13.7"),
+            scalas = List("2.13.8"),
             javas = List(JavaSpec.temurin("11"))
           )
         )
