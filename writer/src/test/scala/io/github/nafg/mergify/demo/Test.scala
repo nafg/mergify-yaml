@@ -11,7 +11,7 @@ class Test extends munit.FunSuite {
     val yaml =
       defaultMergify
         .addPullRequestRule("automatic merge successful scala-steward PRs")(
-          Action.Merge(strict = true),
+          Action.Merge(),
           Action.Queue(name = "default"),
           Action.DismissReviews(changesRequested = false)
         )(
