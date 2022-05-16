@@ -23,8 +23,7 @@ lazy val writer =
       Compile / sourceGenerators += Def.task {
         val dir = (Compile / sourceManaged).value / "io/github/nafg/mergify"
         val file = dir / "models.scala"
-        IO.write(
-          file,
+        val code =
           ScrapeActions.run()
             .map(_.linesWithSeparators.map("  " + _).mkString + " extends Action")
             .mkString(
@@ -40,7 +39,8 @@ lazy val writer =
               sep = "\n\n\n",
               end = "}\n"
             )
-        )
+        println(code)
+        IO.write(file, code)
         Seq(file)
       }.taskValue
     )
