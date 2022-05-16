@@ -32,7 +32,7 @@ class Test extends munit.FunSuite {
     println(yaml)
 
     requests.post(
-      url = "https://gh.mergify.io/validate/",
+      url = "https://engine.mergify.io/validate/",
       data = requests.MultiPart(requests.MultiItem("data", yaml, ".mergify.yml")),
       check = true
     )
