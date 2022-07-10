@@ -1,1 +1,1 @@
-libraryDependencies += "org.jsoup" % "jsoup" % "1.14.3"
+libraryDependencies += "org.jsoup" % "jsoup" % "1.15.1"
