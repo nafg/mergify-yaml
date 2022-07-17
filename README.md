@@ -13,7 +13,7 @@ A library for programmatically generating Mergify configs. The library itself is
 
 ## sbt-mergify-github-actions
 
-[![sbt-mergify-github-actions Scala version support](https://index.scala-lang.org/nafg/mergify-yaml/sbt-mergify-github-actions/latest.svg](https://index.scala-lang.org/nafg/mergify-yaml/sbt-mergify-github-actions)
+[![sbt-mergify-github-actions Scala version support](https://index.scala-lang.org/nafg/mergify-yaml/sbt-mergify-github-actions/latest.svg)](https://index.scala-lang.org/nafg/mergify-yaml/sbt-mergify-github-actions)
 
 An SBT plugin that pulls in `sbt-github-actions` but also overrides `githubWorkflowGenerate` to also update `.mergify.yml`.
 
