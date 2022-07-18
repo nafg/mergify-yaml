@@ -1,7 +1,8 @@
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-
 import java.net.URL
+
+import scala.annotation.tailrec
 import scala.collection.JavaConverters._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
@@ -12,6 +13,7 @@ import scala.concurrent.{Await, Future}
  * Scrape the available set of actions from the Mergify website
  */
 object ScrapeActions {
+  @tailrec
   def getJsoupDocument(url: URL): Document = {
     val urlString = url.toString
     val doc = Jsoup.connect(urlString).followRedirects(true).get()
