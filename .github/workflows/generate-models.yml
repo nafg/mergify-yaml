@@ -1,0 +1,33 @@
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+
+name: Regenerate the models
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    name: Regenerate the models
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-java@v3
+        with:
+          distribution: adopt
+          java-version: 8
+          cache: sbt
+
+      - run: sbt generateModels
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v4
+        with:
+          commit-message: Regenerated models
+          title: Regenerated models
+          add-paths: |
+            generated-models/src/main/scala/io/github/nafg/mergify/models/generated/*
+          delete-branch: true
