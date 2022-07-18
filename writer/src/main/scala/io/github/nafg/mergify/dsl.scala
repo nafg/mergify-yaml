@@ -3,13 +3,15 @@ package io.github.nafg.mergify
 import scala.language.implicitConversions
 
 object dsl {
-  implicit def boolAttributeToCondition(attribute: Attribute[Boolean]): Condition = Condition(attribute)
+  implicit def boolAttributeToCondition(attribute: Attribute[Boolean]): Condition = Condition.Simple(attribute)
 
   protected class conditionBuilder(attribute: Attribute[_], operator: Operator) {
-    def apply(value: String) = Condition(attribute, Some(operator -> value))
+    def apply(value: String) = Condition.Simple(attribute, Some(operator -> value))
   }
 
-  implicit class AttributeOps(attribute: Attribute[_]) {
+  implicit class AttributeOps[A](attribute: Attribute[A]) {
+    def unary_!(implicit ev: A =:= Boolean) = Condition.Simple(attribute, negated = true)
+
     object :== extends conditionBuilder(attribute, Operator.Equal)
 
     object :!= extends conditionBuilder(attribute, Operator.NotEqual)

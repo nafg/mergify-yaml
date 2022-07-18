@@ -1,10 +1,11 @@
 package io.github.nafg.mergify.sbt
 
+import io.github.nafg.mergify.dsl.*
+
 import sbtghactions.{JavaSpec, WorkflowJob}
 
-
 class Test extends munit.FunSuite {
-  test("test") {
+  test("Simple example") {
     val mergify =
       WriteMergify
         .createMergify(
@@ -36,6 +37,33 @@ class Test extends munit.FunSuite {
         |            name: default
         |""".stripMargin
     )
+  }
 
+  test("Nested conditions and boolean operators") {
+    val thing =
+      defaultMergify.addPullRequestRule("name")(defaultQueueAction)(
+        ((Attr.Author :== "test") && (Attr.Assignee :== "someone")) ||
+          !Attr.Draft
+      )
+
+    assertEquals(
+      thing.toYaml,
+      """defaults: {}
+        |queue_rules:
+        |  - name: default
+        |    conditions: []
+        |pull_request_rules:
+        |  - name: name
+        |    conditions:
+        |      - or:
+        |          - and:
+        |              - author=test
+        |              - assignee=someone
+        |          - -draft
+        |    actions:
+        |        queue:
+        |            name: default
+        |""".stripMargin
+    )
   }
 }
