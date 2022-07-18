@@ -75,14 +75,14 @@ object ScrapeActions {
             .map(_.select("td").asScala.toList.map(_.text()))
 
       def wrapText(initial: String, width: Int) = {
-        var string        = initial
-        var splitComments = Vector.empty[String]
-        while (string.length > width) {
-          val i = string.lastIndexOf(" ", width)
-          splitComments :+= string.take(i)
-          string = string.substring(i).trim
-        }
-        splitComments :+ string
+        @tailrec
+        def loop(string: String, splitComments: Vector[String]): Vector[String] =
+          if (string.length > width) {
+            val i = string.lastIndexOf(" ", width)
+            loop(string.substring(i).trim, splitComments :+ string.take(i))
+          } else
+            splitComments :+ string
+        loop(initial, Vector.empty)
       }
 
       def mkComment(description: String, indent: String) =
