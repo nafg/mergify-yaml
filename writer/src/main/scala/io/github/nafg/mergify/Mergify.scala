@@ -6,7 +6,6 @@ import io.circe.Encoder
 import io.circe.derivation.{deriveEncoder, renaming}
 import io.circe.yaml.Printer
 
-
 case class Mergify(defaults: ActionSet = ActionSet(),
                    queueRules: Seq[QueueRule] = Nil,
                    pullRequestRules: Seq[PullRequestRule] = Nil) {

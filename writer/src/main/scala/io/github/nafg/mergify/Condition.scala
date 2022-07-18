@@ -2,7 +2,6 @@ package io.github.nafg.mergify
 
 import io.circe.Encoder
 
-
 case class Condition(attribute: Attribute[_],
                      test: Option[(Operator, String)] = None,
                      negated: Boolean = false,

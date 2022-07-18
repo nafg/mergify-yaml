@@ -4,7 +4,6 @@ import scala.language.implicitConversions
 
 import io.circe.{Encoder, Json}
 
-
 class ToJson(val underlying: Json) extends AnyVal
 
 object ToJson {

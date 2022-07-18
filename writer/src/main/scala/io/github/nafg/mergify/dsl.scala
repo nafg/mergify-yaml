@@ -2,7 +2,6 @@ package io.github.nafg.mergify
 
 import scala.language.implicitConversions
 
-
 object dsl {
   implicit def boolAttributeToCondition(attribute: Attribute[Boolean]): Condition = Condition(attribute)
 
@@ -28,7 +27,7 @@ object dsl {
 
   def defaultMergify = Mergify().withDefaultQueueRule()
 
-  val Attr = Attribute
+  val Attr   = Attribute
   val Action = io.github.nafg.mergify.models.generated.Action
 
   def defaultQueueAction = Action.Queue(name = "default")

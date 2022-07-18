@@ -10,31 +10,32 @@ import scala.util.{Failure, Success}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 
-/**
- * Scrape the available set of actions from the Mergify website
- */
+/** Scrape the available set of actions from the Mergify website
+  */
 object ScrapeActions {
   @tailrec
   def getJsoupDocument(url: URL): Document = {
     val urlString = url.toString
-    val doc = Jsoup.connect(urlString).followRedirects(true).get()
+    val doc       = Jsoup.connect(urlString).followRedirects(true).get()
     val canonical = doc.select("html > head > link[rel=canonical]").first()
-    if(canonical == null) doc
+    if (canonical == null) doc
     else {
       val href = new URL(canonical.attr("href"))
-      if(href.equals(url)) doc
+      if (href.equals(url)) doc
       else getJsoupDocument(href)
     }
   }
 
   def run() = {
     val baseUrl = new URL("https://docs.mergify.io/actions/index.html")
-    val index = getJsoupDocument(baseUrl)
+    val index   = getJsoupDocument(baseUrl)
 
     val actionPages =
-      index.select("#actions > .use-cases a")
+      index
+        .select("#actions > .use-cases a")
         .eachAttr("href")
-        .asScala.toList
+        .asScala
+        .toList
         .map(baseUrl.toURI.resolve(_).toURL)
 
     val actionDocs = {
@@ -46,7 +47,7 @@ object ScrapeActions {
             println("Scraping " + url)
             getJsoupDocument(url)
           }.andThen {
-            case Success(value)     => println("Finished " + url)
+            case Success(value) => println("Finished " + url)
             case Failure(exception) =>
               Console.err.println("Failed for " + url + ":")
               exception.printStackTrace()
@@ -57,8 +58,8 @@ object ScrapeActions {
     }
 
     for (doc <- actionDocs) yield {
-      val h1 = doc.select("h1").first()
-      val name = h1.ownText().split('_').map(_.capitalize).mkString
+      val h1          = doc.select("h1").first()
+      val name        = h1.ownText().split('_').map(_.capitalize).mkString
       val description = h1.nextElementSibling().text().trim
 
       val table = doc.select("table").first()
@@ -67,11 +68,14 @@ object ScrapeActions {
         if (table == null)
           Nil
         else
-          table.select("tbody > tr").asScala.toList
+          table
+            .select("tbody > tr")
+            .asScala
+            .toList
             .map(_.select("td").asScala.toList.map(_.text()))
 
       def wrapText(initial: String, width: Int) = {
-        var string = initial
+        var string        = initial
         var splitComments = Vector.empty[String]
         while (string.length > width) {
           val i = string.lastIndexOf(" ", width)
@@ -85,7 +89,7 @@ object ScrapeActions {
         if (description.isEmpty) ""
         else
           wrapText(description, 114 - indent.length)
-            .mkString(s"$indent/**\n$indent * ", s"\n$indent * ", s"\n$indent */\n")
+            .mkString(s"$indent/** ", s"\n$indent  * ", s"\n$indent  */\n")
 
       mkComment(description, "") +
         "case class " + name +

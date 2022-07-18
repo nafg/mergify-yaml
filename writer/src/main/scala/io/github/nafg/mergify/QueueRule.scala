@@ -1,10 +1,9 @@
 package io.github.nafg.mergify
 
-import io.circe.Encoder
-import io.circe.derivation.{deriveEncoder, renaming}
-
 import java.time.Duration
 
+import io.circe.Encoder
+import io.circe.derivation.{deriveEncoder, renaming}
 
 case class QueueRule(name: String,
                      conditions: Seq[Condition],
@@ -18,8 +17,8 @@ object QueueRule {
   implicit val encodeDuration: Encoder[Duration] =
     Encoder.encodeString.contramap { d =>
       List(
-        d.toDaysPart -> "days",
-        d.toHoursPart -> "hours",
+        d.toDaysPart    -> "days",
+        d.toHoursPart   -> "hours",
         d.toMinutesPart -> "minutes",
         d.toSecondsPart -> "seconds"
       )
