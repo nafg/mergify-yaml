@@ -1,5 +1,7 @@
 package io.github.nafg.mergify
 
+import io.github.nafg.mergify.models.generated.Action
+
 import io.circe.Encoder
 import io.circe.derivation.{deriveEncoder, renaming}
 import io.circe.yaml.Printer

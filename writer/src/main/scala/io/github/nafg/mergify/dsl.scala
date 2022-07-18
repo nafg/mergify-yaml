@@ -29,7 +29,7 @@ object dsl {
   def defaultMergify = Mergify().withDefaultQueueRule()
 
   val Attr = Attribute
-  val Action = io.github.nafg.mergify.Action
+  val Action = io.github.nafg.mergify.models.generated.Action
 
   def defaultQueueAction = Action.Queue(name = "default")
 }

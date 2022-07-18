@@ -1,8 +1,8 @@
 package io.github.nafg.mergify
 
-import io.circe.{Encoder, Json}
-
 import scala.language.implicitConversions
+
+import io.circe.{Encoder, Json}
 
 
 class ToJson(val underlying: Json) extends AnyVal

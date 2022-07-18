@@ -3,9 +3,10 @@ package io.github.nafg.mergify
 import io.circe.syntax.EncoderOps
 import io.circe.{Encoder, Json}
 import magnolia.{CaseClass, Magnolia, SealedTrait}
-
 import scala.language.experimental.macros
 import scala.language.higherKinds
+
+import io.github.nafg.mergify.models.generated.Action
 
 
 case class ActionSet(actions: Seq[Action] = Nil)

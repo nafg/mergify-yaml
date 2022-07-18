@@ -1,13 +1,14 @@
-import org.jsoup.Jsoup
-import org.jsoup.nodes.Document
 import java.net.URL
+import java.util.concurrent.Executors
 
 import scala.annotation.tailrec
 import scala.collection.JavaConverters._
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
-import scala.concurrent.{Await, Future}
+import scala.concurrent.{Await, ExecutionContext, Future}
+import scala.util.{Failure, Success}
 
+import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 
 /**
  * Scrape the available set of actions from the Mergify website
@@ -36,18 +37,24 @@ object ScrapeActions {
         .asScala.toList
         .map(baseUrl.toURI.resolve(_).toURL)
 
-    val actionDocs =
+    val actionDocs = {
+      implicit val executionContext =
+        ExecutionContext.fromExecutor(Executors.newFixedThreadPool(4))
       Await.result(
         Future.traverse(actionPages) { url =>
           Future {
             println("Scraping " + url)
-            val ret = getJsoupDocument(url)
-            println("Finished " + url)
-            ret
+            getJsoupDocument(url)
+          }.andThen {
+            case Success(value)     => println("Finished " + url)
+            case Failure(exception) =>
+              Console.err.println("Failed for " + url + ":")
+              exception.printStackTrace()
           }
         },
         20.seconds
       )
+    }
 
     for (doc <- actionDocs) yield {
       val h1 = doc.select("h1").first()
@@ -63,8 +70,24 @@ object ScrapeActions {
           table.select("tbody > tr").asScala.toList
             .map(_.select("td").asScala.toList.map(_.text()))
 
+      def wrapText(initial: String, width: Int) = {
+        var string = initial
+        var splitComments = Vector.empty[String]
+        while (string.length > width) {
+          val i = string.lastIndexOf(" ", width)
+          splitComments :+= string.take(i)
+          string = string.substring(i).trim
+        }
+        splitComments :+ string
+      }
 
-      (if (description.isEmpty) "" else "/** " + description + "*/\n") +
+      def mkComment(description: String, indent: String) =
+        if (description.isEmpty) ""
+        else
+          wrapText(description, 114 - indent.length)
+            .mkString(s"$indent/**\n$indent * ", s"\n$indent * ", s"\n$indent */\n")
+
+      mkComment(description, "") +
         "case class " + name +
         (for (List(name, typ, default, description) <- rows) yield {
           val camelCaseName = (name.split('_').toList match {
@@ -93,7 +116,7 @@ object ScrapeActions {
 
           val defaultMsg = commentDefault.fold("")("\nDefault: " + _)
 
-          "\n  /** " + description + defaultMsg + "*/\n  " +
+          "\n" + mkComment(description + defaultMsg, "  ") + "  " +
             camelCaseName + ": " + scalaTypeAndDefault
         })
           .mkString("(", ",", "\n)")
