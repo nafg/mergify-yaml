@@ -7,17 +7,21 @@ import sbtghactions.{JavaSpec, WorkflowJob}
 class Test extends munit.FunSuite {
   test("Simple example") {
     val mergify =
-      WriteMergify
-        .createMergify(
-          WorkflowJob(
-            id = "build",
-            name = "Build and Test",
-            steps = Nil,
-            oses = List("ubuntu-latest"),
-            scalas = List("2.13.7"),
-            javas = List(JavaSpec.temurin("11"))
+      WriteMergify.defaultScalaStewardMergify(
+        WriteMergify.defaultScalaStewardConditions(
+          WriteMergify.defaultScalaStewardAuthor,
+          Seq(
+            WorkflowJob(
+              id = "build",
+              name = "Build and Test",
+              steps = Nil,
+              oses = List("ubuntu-latest"),
+              scalas = List("2.13.7"),
+              javas = List(JavaSpec.temurin("11"))
+            )
           )
         )
+      )
 
     val yaml = mergify.toYaml
 
@@ -28,7 +32,7 @@ class Test extends munit.FunSuite {
         |  - name: default
         |    conditions: []
         |pull_request_rules:
-        |  - name: Automatically merge successful scala-steward PRs
+        |  - name: Automatically merge successful Scala Steward PRs
         |    conditions:
         |      - author=scala-steward
         |      - check-success=Build and Test (ubuntu-latest, 2.13.7, temurin@11)
