@@ -210,7 +210,11 @@ object Action {
     title: String = "",
     /** The summary of the check.
       */
-    summary: String = ""
+    summary: String = "",
+    /** List of conditions to match to mark the pull request check as succeeded, otherwise, it will be marked as
+      * failing. If unset, the conditions from the rule that triggers this action are used.
+      */
+    successConditions: ToJson /*list of conditions*/
   ) extends Action
 
 
