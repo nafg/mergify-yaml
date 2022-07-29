@@ -223,7 +223,7 @@ object Action {
   case class Queue(
     /** The name of the merge queue where to move the pull request.
       */
-    name: String = "",
+    name: String = "default",
     /** Merge method to use. Possible values are merge, squash, rebase or fast-forward. fast-forward is not supported on
       * queues with speculative_checks > 1, batch_size > 1, or with allow_inplace_checks set to false.
       */
