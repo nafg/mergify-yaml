@@ -23,10 +23,7 @@ class Test extends munit.FunSuite {
         )
       )
 
-    val yaml = mergify.toYaml
-
     assertEquals(
-      yaml,
       """defaults: {}
         |queue_rules:
         |  - name: default
@@ -37,9 +34,9 @@ class Test extends munit.FunSuite {
         |      - author=scala-steward
         |      - check-success=Build and Test (ubuntu-latest, 2.13.7, temurin@11)
         |    actions:
-        |        queue:
-        |            name: default
-        |""".stripMargin
+        |        queue: {}
+        |""".stripMargin,
+      mergify.toYaml
     )
   }
 
@@ -51,7 +48,6 @@ class Test extends munit.FunSuite {
       )
 
     assertEquals(
-      thing.toYaml,
       """defaults: {}
         |queue_rules:
         |  - name: default
@@ -65,9 +61,9 @@ class Test extends munit.FunSuite {
         |              - assignee=someone
         |          - -draft
         |    actions:
-        |        queue:
-        |            name: default
-        |""".stripMargin
+        |        queue: {}
+        |""".stripMargin,
+      thing.toYaml
     )
   }
 }
