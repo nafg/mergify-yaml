@@ -338,4 +338,8 @@ object Action {
     * head branch of the pull request.
     */
   case class Update(
+    /** Premium Plan Feature 🦾 Mergify can impersonate a GitHub user to update a pull request. If no bot_account is
+      * set, Mergify will update the pull request itself.
+      */
+    botAccount: String = ""
   ) extends Action}
