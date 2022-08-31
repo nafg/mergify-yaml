@@ -273,7 +273,11 @@ object Action {
       * user. You can specify the account to use with this option. If no bot_account is set, Mergify picks randomly one
       * of the organization users instead. The user account must have already been logged in Mergify dashboard once.
       */
-    botAccount: String = ""
+    botAccount: String = "",
+    /** When set to True, commits starting with fixup!, squash! and amend! are squashed during the rebase.
+  Default: True
+      */
+    autosquash: Option[ToJson /*bool*/] = None
   ) extends Action
 
 
