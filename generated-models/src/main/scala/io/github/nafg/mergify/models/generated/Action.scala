@@ -275,7 +275,8 @@ object Action {
       */
     botAccount: String = "",
     /** When set to True, commits starting with fixup!, squash! and amend! are squashed during the rebase.
-  Default: True
+  Default:
+      * False
       */
     autosquash: Option[ToJson /*bool*/] = None
   ) extends Action
