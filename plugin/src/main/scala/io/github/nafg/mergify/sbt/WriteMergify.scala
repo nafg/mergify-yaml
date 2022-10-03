@@ -12,44 +12,45 @@ object WriteMergify extends AutoPlugin {
 
   override def trigger = allRequirements
 
-  val mergifyScalaStewardAuthor = settingKey[String]("The author that identifies Scala Steward pull requests")
-  val mergifyScalaStewardIncludedJobs = settingKey[Seq[WorkflowJob]](
-    "The generated jobs that have to pass to merge Scala Steward PRs"
-  )
-  val mergifyScalaStewardConditions = settingKey[Seq[Condition]]("The conditions for the Scala Steward PR rule")
-  val mergify                       = settingKey[Mergify]("The resulting Mergify object")
+  //noinspection ScalaWeakerAccess
+  object autoImport {
+    val mergifyExtraConditions = settingKey[Seq[Condition]]("Conditions required to merge other than passing the build")
+    val mergifyIncludedJobs = settingKey[Seq[WorkflowJob]](
+      "The generated jobs that have to pass to merge Scala Steward PRs"
+    )
+    val mergifyConditions = settingKey[Seq[Condition]]("The conditions for the Scala Steward PR rule")
+    val mergify = settingKey[Mergify]("The resulting Mergify object")
+  }
+
+  import autoImport.*
+
 
   def workflowJobCheckNames(jobs: Seq[WorkflowJob]) =
     for (job <- jobs; o <- job.oses; s <- job.scalas; v <- job.javas)
       yield s"${job.name} ($o, $s, ${v.render})"
 
-  def defaultScalaStewardAuthor = "scala-steward"
+  def defaultExtraConditions = Seq(Attr.Author :== "scala-steward")
 
-  def defaultScalaStewardConditions(author: String, jobs: Seq[WorkflowJob]) =
-    (Attr.Author :== author) +:
+  def defaultConditions(extraConditions: Seq[Condition], jobs: Seq[WorkflowJob]) =
+    extraConditions ++
       (for (name <- workflowJobCheckNames(jobs))
         yield Attr.CheckSuccess :== name)
 
-  def defaultScalaStewardMergify(conditions: Seq[Condition]) =
+  def buildMergify(conditions: Seq[Condition]) =
     defaultMergify
       .addPullRequestRule("Automatically merge successful Scala Steward PRs")(defaultQueueAction)(
-        conditions*
+        conditions *
       )
 
-  override def projectSettings = {
+  override def projectSettings =
     Seq(
-      mergifyScalaStewardAuthor       := defaultScalaStewardAuthor,
-      mergifyScalaStewardIncludedJobs := githubWorkflowGeneratedCI.value.filter(_.id == "build"),
-      mergifyScalaStewardConditions :=
-        defaultScalaStewardConditions(
-          mergifyScalaStewardAuthor.value,
-          mergifyScalaStewardIncludedJobs.value
-        ),
-      mergify := defaultScalaStewardMergify(mergifyScalaStewardConditions.value),
+      mergifyExtraConditions := defaultExtraConditions,
+      mergifyIncludedJobs := githubWorkflowGeneratedCI.value.filter(_.id == "build"),
+      mergifyConditions := defaultConditions(mergifyExtraConditions.value, mergifyIncludedJobs.value),
+      mergify := buildMergify(mergifyConditions.value),
       githubWorkflowGenerate := {
         githubWorkflowGenerate.value
         IO.write(file(".mergify.yml"), mergify.value.toYaml)
       }
     )
-  }
 }
