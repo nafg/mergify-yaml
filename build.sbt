@@ -1,10 +1,18 @@
+import _root_.io.github.nafg.mergify.dsl._
+
+
 val Scala212 = "2.12.17"
 val Scala213 = "2.13.9"
 
 ThisBuild / scalacOptions += "-feature"
 ThisBuild / organization := "io.github.nafg.mergify"
 
-name           := "mergify-yaml"
+mergifyExtraConditions := Seq(
+  (Attr.Author :== "scala-steward") ||
+    (Attr.Author :== "nafg-scala-steward[bot]")
+)
+
+name := "mergify-yaml"
 publish / skip := true
 
 val generateModels = taskKey[File]("Generate the models by scraping the documentation")
