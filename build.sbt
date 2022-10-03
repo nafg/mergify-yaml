@@ -1,5 +1,5 @@
 val Scala212 = "2.12.16"
-val Scala213 = "2.13.8"
+val Scala213 = "2.13.9"
 
 ThisBuild / scalacOptions += "-feature"
 ThisBuild / organization := "io.github.nafg.mergify"
