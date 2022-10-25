@@ -69,7 +69,9 @@ class Test extends munit.FunSuite {
   }
 
   test("Multiple alternatives") {
-    val jobs = List(WorkflowJob("build", "Build", Nil, scalas = List("2.13.10", "3.2.0")))
+    val scalaVersion1 = "2.13.10"
+    val scalaVersion2 = "3.2.0"
+    val jobs = List(WorkflowJob("build", "Build", Nil, scalas = List(scalaVersion1, scalaVersion2)))
     val authorsCondition =
       Seq("scala-steward", "renovate[bot]")
         .map(Attr.Author :== _)
@@ -77,21 +79,21 @@ class Test extends munit.FunSuite {
     val conditions = WriteMergify.defaultConditions(Seq(authorsCondition), jobs)
 
     assertEquals(
-      """defaults: {}
-        |queue_rules:
-        |  - name: default
-        |    conditions: []
-        |pull_request_rules:
-        |  - name: Automatically merge successful Scala Steward PRs
-        |    conditions:
-        |      - or:
-        |          - author=scala-steward
-        |          - author=renovate[bot]
-        |      - check-success=Build (ubuntu-latest, 2.13.9, temurin@11)
-        |      - check-success=Build (ubuntu-latest, 3.2.0, temurin@11)
-        |    actions:
-        |        queue: {}
-        |""".stripMargin,
+      s"""defaults: {}
+         |queue_rules:
+         |  - name: default
+         |    conditions: []
+         |pull_request_rules:
+         |  - name: Automatically merge successful Scala Steward PRs
+         |    conditions:
+         |      - or:
+         |          - author=scala-steward
+         |          - author=renovate[bot]
+         |      - check-success=Build (ubuntu-latest, $scalaVersion1, temurin@11)
+         |      - check-success=Build (ubuntu-latest, $scalaVersion2, temurin@11)
+         |    actions:
+         |        queue: {}
+         |""".stripMargin,
       WriteMergify.buildMergify(conditions).toYaml
     )
   }
