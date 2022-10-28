@@ -56,7 +56,7 @@ lazy val writer =
     .dependsOn(`generated-models`)
     .settings(
       name                                    := "mergify-writer",
-      libraryDependencies += "io.circe"       %% "circe-yaml"       % "0.14.1",
+      libraryDependencies += "io.circe"       %% "circe-yaml"       % "0.14.2",
       libraryDependencies += "io.circe"       %% "circe-derivation" % "0.13.0-M5",
       libraryDependencies += "com.propensive" %% "magnolia"         % "0.17.0",
       libraryDependencies += "org.scala-lang"  % "scala-reflect"    % scalaVersion.value % Provided,
