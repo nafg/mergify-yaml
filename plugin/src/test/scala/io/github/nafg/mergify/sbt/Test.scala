@@ -71,7 +71,7 @@ class Test extends munit.FunSuite {
   test("Multiple alternatives") {
     val scalaVersion1 = "2.13.10"
     val scalaVersion2 = "3.2.0"
-    val jobs = List(WorkflowJob("build", "Build", Nil, scalas = List(scalaVersion1, scalaVersion2)))
+    val jobs          = List(WorkflowJob("build", "Build", Nil, scalas = List(scalaVersion1, scalaVersion2)))
     val authorsCondition =
       Seq("scala-steward", "renovate[bot]")
         .map(Attr.Author :== _)
