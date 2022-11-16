@@ -178,7 +178,11 @@ object Action {
     remove: Seq[String] = Nil,
     /** Remove all labels from the pull request.
       */
-    removeAll: Boolean = false
+    removeAll: Boolean = false,
+    /** Toggle labels in the list based on the conditions. If all the conditions are a success, all the labels in the
+      * list will be added, otherwise, they will all be removed.
+      */
+    toggle: Seq[String] = Nil
   ) extends Action
 
 
