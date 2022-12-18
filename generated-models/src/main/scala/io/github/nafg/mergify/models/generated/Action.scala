@@ -192,10 +192,11 @@ object Action {
     /** Merge method to use. Possible values are merge, squash, rebase or fast-forward.
       */
     method: String = "merge",
-    /** If method is set to rebase, but the pull request cannot be rebased, the method defined in rebase_fallback will
-      * be used instead. Possible values are merge, squash, none. none will report an error if rebase is not possible.
+    /** Deprecated 😵 If method is set to rebase, but the pull request cannot be rebased, the method defined in
+      * rebase_fallback will be used instead. Possible values are merge, squash, none. none will report an error if
+      * rebase is not possible. This option is deprecated and will be removed on March 13th, 2023.
       */
-    rebaseFallback: String = "merge",
+    rebaseFallback: String = "none",
     /** Premium Plan Feature 🦾 Mergify can impersonate a GitHub user to merge pull request. If no merge_bot_account is
       * set, Mergify will merge the pull request itself. The user account must have already been logged in Mergify
       * dashboard once and have write or maintain permission.
@@ -232,10 +233,11 @@ object Action {
       * queues with speculative_checks > 1, batch_size > 1, or with allow_inplace_checks set to false.
       */
     method: String = "merge",
-    /** If method is set to rebase, but the pull request cannot be rebased, the method defined in rebase_fallback will
-      * be used instead. Possible values are merge, squash, none. none will report an error if rebase is not possible.
+    /** Deprecated 😵 If method is set to rebase, but the pull request cannot be rebased, the method defined in
+      * rebase_fallback will be used instead. Possible values are merge, squash, none. none will report an error if
+      * rebase is not possible. This option is deprecated and will be removed on March 13th, 2023.
       */
-    rebaseFallback: String = "merge",
+    rebaseFallback: String = "none",
     /** Premium Plan Feature 🦾 Mergify can impersonate a GitHub user to merge pull request. If no merge_bot_account is
       * set, Mergify will merge the pull request itself. The user account must have already been logged in Mergify
       * dashboard once and have write or maintain permission.
@@ -261,8 +263,7 @@ object Action {
       * in the pull request body (see Defining the Commit Message).
       */
     commitMessageTemplate: String = "",
-    /** Whether branch protections are required for queueing pull requests. This option is ignored if the target queue
-      * has speculative_checks > 1.
+    /** Whether branch protections are required for queueing pull requests.
   Default: true
       */
     requireBranchProtection: Option[ToJson /*bool*/] = None
