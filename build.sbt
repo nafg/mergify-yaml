@@ -60,7 +60,7 @@ lazy val writer =
       libraryDependencies += "io.circe"       %% "circe-derivation" % "0.13.0-M5",
       libraryDependencies += "com.propensive" %% "magnolia"         % "0.17.0",
       libraryDependencies += "org.scala-lang"  % "scala-reflect"    % scalaVersion.value % Provided,
-      libraryDependencies += "com.lihaoyi"    %% "requests"         % "0.7.1"            % Test,
+      libraryDependencies += "com.lihaoyi"    %% "requests"         % "0.8.0"            % Test,
       libraryDependencies += "org.scalameta"  %% "munit"            % "0.7.29"           % Test
     )
 
