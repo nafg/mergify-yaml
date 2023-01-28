@@ -26,35 +26,35 @@ object Action {
     * branch.
     */
   case class Backport(
-    /** The list of branches the pull request should be copied to.
+    /** Users to assign the newly created pull request. As the type is Template, you could use, e.g., {{author}} to
+      * assign the pull request to its original author.
       */
-    branches: Seq[String] = Nil,
-    /** The list of regexes to find branches the pull request should be copied to.
+    assignees: Seq[String],
+    /** The pull request body.
       */
-    regexes: Seq[String] = Nil,
-    /** Whether to create the pull requests even if they are conflicts when cherry-picking the commits.
-      */
-    ignoreConflicts: Boolean = true,
+    body: String = "This is an automatic backport of pull request #{{number}} done by [Mergify](https://mergify.com).\n{{cherry_pick_error}}",
     /** Premium Plan Feature 🦾 Mergify can impersonate a GitHub user to backport a pull request. If no bot_account is
       * set, Mergify backports the pull request itself.
       */
     botAccount: String = "",
+    /** The list of branches the pull request should be copied to.
+      */
+    branches: Seq[String] = Nil,
+    /** Whether to create the pull requests even if they are conflicts when cherry-picking the commits.
+      */
+    ignoreConflicts: Boolean = true,
     /** The list of labels to add to the created pull requests.
       */
     labels: Seq[String] = Nil,
     /** The label to add to the created pull request if it has conflicts and ignore_conflicts is set to true.
       */
     labelConflicts: String = "conflicts",
-    /** Users to assign the newly created pull request. As the type is Template, you could use, e.g., {{author}} to
-      * assign the pull request to its original author.
+    /** The list of regexes to find branches the pull request should be copied to.
       */
-    assignees: Seq[String],
+    regexes: Seq[String] = Nil,
     /** The pull request title.
       */
-    title: String = "{{ title }} (backport #{{ number }})",
-    /** The pull request body.
-      */
-    body: String = "This is an automatic backport of pull request #{{number}} done by [Mergify](https://mergify.com).\n{{cherry_pick_error}}"
+    title: String = "{{ title }} (backport #{{ number }})"
   ) extends Action
 
 
@@ -70,48 +70,48 @@ object Action {
   /** The comment action posts a comment to the pull request.
     */
   case class Comment(
-    /** The message to write as a comment.
-      */
-    message: String = "",
     /** Premium Plan Feature 🦾 Mergify can impersonate a GitHub user to comment a pull request. If no bot_account is
       * set, Mergify will comment the pull request itself.
       */
-    botAccount: String = ""
+    botAccount: String = "",
+    /** The message to write as a comment.
+      */
+    message: String = ""
   ) extends Action
 
 
   /** The copy action creates a copy of the pull request targeting other branches.
     */
   case class Copy(
-    /** The list of branches the pull request should be copied to.
+    /** Users to assign the newly created pull request. As the type is Template, you could use, e.g., {{author}} to
+      * assign the pull request to its original author.
       */
-    branches: Seq[String] = Nil,
-    /** The list of regexes to find branches the pull request should be copied to.
+    assignees: Seq[String],
+    /** The pull request body.
       */
-    regexes: Seq[String] = Nil,
-    /** Whether to create the pull requests even if they are conflicts when cherry-picking the commits.
-      */
-    ignoreConflicts: Boolean = true,
+    body: String = "This is an automatic copy of pull request #{{number}} done by [Mergify](https://mergify.com).\n{{cherry_pick_error}}",
     /** Premium Plan Feature 🦾 Mergify can impersonate a GitHub user to copy a pull request. If no bot_account is set,
       * Mergify copies the pull request itself.
       */
     botAccount: String = "",
+    /** The list of branches the pull request should be copied to.
+      */
+    branches: Seq[String] = Nil,
+    /** Whether to create the pull requests even if they are conflicts when cherry-picking the commits.
+      */
+    ignoreConflicts: Boolean = true,
     /** The list of labels to add to the created pull requests.
       */
     labels: Seq[String] = Nil,
     /** The label to add to the created pull request if it has conflicts and ignore_conflicts is set to true.
       */
     labelConflicts: String = "conflicts",
-    /** Users to assign the newly created pull request. As the type is Template, you could use, e.g., {{author}} to
-      * assign the pull request to its original author.
+    /** The list of regexes to find branches the pull request should be copied to.
       */
-    assignees: Seq[String],
+    regexes: Seq[String] = Nil,
     /** The pull request title.
       */
-    title: String = "{{ title }} (copy #{{ number }})",
-    /** The pull request body.
-      */
-    body: String = "This is an automatic copy of pull request #{{number}} done by [Mergify](https://mergify.com).\n{{cherry_pick_error}}"
+    title: String = "{{ title }} (copy #{{ number }})"
   ) extends Action
 
 
@@ -189,6 +189,15 @@ object Action {
   /** The merge action merges the pull request into its base branch.
     */
   case class Merge(
+    /** Template to use as the commit message when using the merge or squash merge method. Template can also be defined
+      * in the pull request body (see Defining the Commit Message).
+      */
+    commitMessageTemplate: String = "",
+    /** Premium Plan Feature 🦾 Mergify can impersonate a GitHub user to merge pull request. If no merge_bot_account is
+      * set, Mergify will merge the pull request itself. The user account must have already been logged in Mergify
+      * dashboard once and have write or maintain permission.
+      */
+    mergeBotAccount: String = "",
     /** Merge method to use. Possible values are merge, squash, rebase or fast-forward.
       */
     method: String = "merge",
@@ -196,77 +205,75 @@ object Action {
       * rebase_fallback will be used instead. Possible values are merge, squash, none. none will report an error if
       * rebase is not possible. This option is deprecated and will be removed on March 13th, 2023.
       */
-    rebaseFallback: String = "none",
-    /** Premium Plan Feature 🦾 Mergify can impersonate a GitHub user to merge pull request. If no merge_bot_account is
-      * set, Mergify will merge the pull request itself. The user account must have already been logged in Mergify
-      * dashboard once and have write or maintain permission.
-      */
-    mergeBotAccount: String = "",
-    /** Template to use as the commit message when using the merge or squash merge method. Template can also be defined
-      * in the pull request body (see Defining the Commit Message).
-      */
-    commitMessageTemplate: String = ""
+    rebaseFallback: String = "none"
   ) extends Action
 
 
   case class PostCheck(
-    /** The title of the check.
-      */
-    title: String = "",
-    /** The summary of the check.
-      */
-    summary: String = "",
     /** List of conditions to match to mark the pull request check as succeeded, otherwise, it will be marked as
       * failing. If unset, the conditions from the rule that triggers this action are used.
       */
-    successConditions: ToJson /*list of conditions*/
+    successConditions: ToJson /*list of conditions*/,
+    /** The summary of the check.
+      */
+    summary: String = "",
+    /** The title of the check.
+      */
+    title: String = ""
   ) extends Action
 
 
   /** The queue action moves the pull request into one of the merge queue defined in Queue Rules.
     */
   case class Queue(
-    /** The name of the merge queue where to move the pull request.
+    /** Deprecated 😵 Template to use as the commit message when using the merge or squash merge method. Template can
+      * also be defined in the pull request body (see Defining the Commit Message). This option has been moved under the
+      * Queue Rules section of the configuration and will be removed from this section in the future.
       */
-    name: String = "default",
-    /** Merge method to use. Possible values are merge, squash, rebase or fast-forward. fast-forward is not supported on
-      * queues with speculative_checks > 1, batch_size > 1, or with allow_inplace_checks set to false.
-      */
-    method: String = "merge",
-    /** Deprecated 😵 If method is set to rebase, but the pull request cannot be rebased, the method defined in
-      * rebase_fallback will be used instead. Possible values are merge, squash, none. none will report an error if
-      * rebase is not possible. This option is deprecated and will be removed on March 13th, 2023.
-      */
-    rebaseFallback: String = "none",
-    /** Premium Plan Feature 🦾 Mergify can impersonate a GitHub user to merge pull request. If no merge_bot_account is
-      * set, Mergify will merge the pull request itself. The user account must have already been logged in Mergify
-      * dashboard once and have write or maintain permission.
+    commitMessageTemplate: String = "",
+    /** Premium Plan Feature 🦾 Deprecated 😵 Mergify can impersonate a GitHub user to merge pull request. If no
+      * merge_bot_account is set, Mergify will merge the pull request itself. The user account must have already been
+      * logged in Mergify dashboard once and have write or maintain permission. This option has been moved under the
+      * Queue Rules section of the configuration and will be removed from this section in the future.
       */
     mergeBotAccount: String = "",
-    /** Method to use to update the pull request with its base branch when the speculative check is done in-place.
-      * Possible values: merge to merge the base branch into the pull request. rebase to rebase the pull request against
-      * its base branch. Note that the rebase method has some drawbacks, see Using Rebase to Update.
+    /** Deprecated 😵 Merge method to use. Possible values are merge, squash, rebase or fast-forward. fast-forward is
+      * not supported on queues with speculative_checks > 1, batch_size > 1, or with allow_inplace_checks set to false.
+      * This option has been moved under the Queue Rules section of the configuration and will be removed from this
+      * section in the future.
       */
-    updateMethod: String = "merge for all merge methods except fast-forward where rebase is used",
-    /** Premium Plan Feature 🦾 For certain actions, such as rebasing branches, Mergify has to impersonate a GitHub
-      * user. You can specify the account to use with this option. If no update_bot_account is set, Mergify picks
-      * randomly one of the organization users instead. The user account must have already been logged in Mergify
-      * dashboard once.
+    method: String = "merge",
+    /** The name of the queue in which the pull request should be added.
       */
-    updateBotAccount: String = "",
+    name: String = "default",
     /** Premium Plan Feature 🦾 This sets the priority of the pull request in the queue. The pull request with the
       * highest priority is merged first. low, medium, high are aliases for 1000, 2000, 3000.
   Default: medium
       */
     priority: Option[ToJson /*1 <= integer <= 10000 or low or medium or high*/] = None,
-    /** Template to use as the commit message when using the merge or squash merge method. Template can also be defined
-      * in the pull request body (see Defining the Commit Message).
+    /** Deprecated 😵 If method is set to rebase, but the pull request cannot be rebased, the method defined in
+      * rebase_fallback will be used instead. Possible values are merge, squash, none. none will report an error if
+      * rebase is not possible. This option is deprecated and will be removed on March 13th, 2023.
       */
-    commitMessageTemplate: String = "",
+    rebaseFallback: String = "none",
     /** Whether branch protections are required for queueing pull requests.
   Default: true
       */
-    requireBranchProtection: Option[ToJson /*bool*/] = None
+    requireBranchProtection: Option[ToJson /*bool*/] = None,
+    /** Premium Plan Feature 🦾 Deprecated 😵 For certain actions, such as rebasing branches, Mergify has to impersonate
+      * a GitHub user. You can specify the account to use with this option. If no update_bot_account is set, Mergify
+      * picks randomly one of the organization users instead. The user account must have already been logged in Mergify
+      * dashboard once. This option has been moved under the Queue Rules section of the configuration and will be
+      * removed from this section in the future.
+      */
+    updateBotAccount: String = "",
+    /** Deprecated 😵 Method to use to update the pull request with its base branch when the speculative check is done
+      * in-place. Possible values: * merge to merge the base branch into the pull request. * rebase to rebase the pull
+      * request against its base branch. Note that the rebase method has some drawbacks, see Using Rebase to Update.
+      * This option has been moved under the Queue Rules section of the configuration and will be removed from this
+      * section in the future.
+      */
+    updateMethod: String = "merge for all merge methods except fast-forward where rebase is used"
   ) extends Action
 
 
@@ -274,27 +281,28 @@ object Action {
     * git rebase locally and push back the result to the GitHub repository.
     */
   case class Rebase(
+    /** When set to True, commits starting with fixup!, squash! and amend! are squashed during the rebase.
+  Default: True
+      */
+    autosquash: Option[ToJson /*bool*/] = None,
     /** Premium Plan Feature 🦾 For certain actions, such as rebasing branches, Mergify has to impersonate a GitHub
       * user. You can specify the account to use with this option. If no bot_account is set, Mergify picks randomly one
       * of the organization users instead. The user account must have already been logged in Mergify dashboard once.
       */
-    botAccount: String = "",
-    /** When set to True, commits starting with fixup!, squash! and amend! are squashed during the rebase.
-  Default: True
-      */
-    autosquash: Option[ToJson /*bool*/] = None
+    botAccount: String = ""
   ) extends Action
 
 
   /** Note GitHub does not allow to request more than 15 users or teams for a review.
     */
   case class RequestReviews(
+    /** Premium Plan Feature 🦾 Mergify can impersonate a GitHub user to request a review on a pull request. If no
+      * bot_account is set, Mergify will request the review itself.
+      */
+    botAccount: String = "",
     /** The username to request reviews from.
       */
     users: ToJson /*list of string or dictionary of login and weight*/,
-    /** The team name to request reviews from.
-      */
-    teams: ToJson /*list of string or dictionary of login and weight*/,
     /** The team names to get the list of users to request reviews from.
       */
     usersFromTeams: ToJson /*list of string or dictionary of login and weight*/,
@@ -303,26 +311,25 @@ object Action {
       * weight to use. Weight must be between 1 and 65535 included.
       */
     randomCount: ToJson /*integer between 1 and 15*/,
-    /** Premium Plan Feature 🦾 Mergify can impersonate a GitHub user to request a review on a pull request. If no
-      * bot_account is set, Mergify will request the review itself.
+    /** The team name to request reviews from.
       */
-    botAccount: String = ""
+    teams: ToJson /*list of string or dictionary of login and weight*/
   ) extends Action
 
 
   /** The review action reviews the pull request. You can use it to approve or request a change on a pull request.
     */
   case class Review(
-    /** The kind of review, can be APPROVE, REQUEST_CHANGES, COMMENT
-      */
-    `type`: String = "APPROVE",
-    /** The message to write as a comment.
-      */
-    message: String = "",
     /** Premium Plan Feature 🦾 Mergify can impersonate a GitHub user to review a pull request. If no bot_account is
       * set, Mergify will review the pull request itself.
       */
-    botAccount: String = ""
+    botAccount: String = "",
+    /** The message to write as a comment.
+      */
+    message: String = "",
+    /** The kind of review, can be APPROVE, REQUEST_CHANGES, COMMENT
+      */
+    `type`: String = "APPROVE"
   ) extends Action
 
 
