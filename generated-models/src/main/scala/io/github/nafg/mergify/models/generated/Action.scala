@@ -246,8 +246,9 @@ object Action {
     /** The name of the queue in which the pull request should be added.
       */
     name: String = "default",
-    /** Premium Plan Feature 🦾 This sets the priority of the pull request in the queue. The pull request with the
-      * highest priority is merged first. low, medium, high are aliases for 1000, 2000, 3000.
+    /** Premium Plan Feature 🦾 Deprecated 😵 To set your priorities, you should now use Priority Rules. This sets the
+      * priority of the pull request in the queue. The pull request with the highest priority is merged first. low,
+      * medium, high are aliases for 1000, 2000, 3000.
   Default: medium
       */
     priority: Option[ToJson /*1 <= integer <= 10000 or low or medium or high*/] = None,
