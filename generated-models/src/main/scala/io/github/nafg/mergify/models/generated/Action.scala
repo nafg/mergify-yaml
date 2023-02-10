@@ -226,23 +226,22 @@ object Action {
   /** The queue action moves the pull request into one of the merge queue defined in Queue Rules.
     */
   case class Queue(
-    /** Deprecated 😵 Template to use as the commit message when using the merge or squash merge method. Template can
-      * also be defined in the pull request body (see Defining the Commit Message). This option has been moved under the
-      * Queue Rules section of the configuration and will be removed from this section in the future.
+    /** Template to use as the commit message when using the merge or squash merge method. Template can also be defined
+      * in the pull request body (see Defining the Commit Message). This option has been moved under the Queue Rules
+      * section of the configuration and will be removed from this section in the future.
       */
     commitMessageTemplate: String = "",
-    /** Premium Plan Feature 🦾 Deprecated 😵 Mergify can impersonate a GitHub user to merge pull request. If no
-      * merge_bot_account is set, Mergify will merge the pull request itself. The user account must have already been
-      * logged in Mergify dashboard once and have write or maintain permission. This option has been moved under the
-      * Queue Rules section of the configuration and will be removed from this section in the future.
+    /** Premium Plan Feature 🦾 Mergify can impersonate a GitHub user to merge pull request. If no merge_bot_account is
+      * set, Mergify will merge the pull request itself. The user account must have already been logged in Mergify
+      * dashboard once and have write or maintain permission. This option overrides the value defined in the Queue Rules
+      * section of the configuration.
       */
     mergeBotAccount: String = "",
-    /** Deprecated 😵 Merge method to use. Possible values are merge, squash, rebase or fast-forward. fast-forward is
-      * not supported on queues with speculative_checks > 1, batch_size > 1, or with allow_inplace_checks set to false.
-      * This option has been moved under the Queue Rules section of the configuration and will be removed from this
-      * section in the future.
+    /** Merge method to use. Possible values are merge, squash, rebase or fast-forward. fast-forward is not supported on
+      * queues with speculative_checks > 1, batch_size > 1, or with allow_inplace_checks set to false. This option
+      * overrides the value defined in the Queue Rules section of the configuration.
       */
-    method: String = "merge",
+    method: String = "",
     /** The name of the queue in which the pull request should be added.
       */
     name: String = "default",
@@ -261,20 +260,19 @@ object Action {
   Default: true
       */
     requireBranchProtection: Option[ToJson /*bool*/] = None,
-    /** Premium Plan Feature 🦾 Deprecated 😵 For certain actions, such as rebasing branches, Mergify has to impersonate
-      * a GitHub user. You can specify the account to use with this option. If no update_bot_account is set, Mergify
-      * picks randomly one of the organization users instead. The user account must have already been logged in Mergify
-      * dashboard once. This option has been moved under the Queue Rules section of the configuration and will be
-      * removed from this section in the future.
+    /** Premium Plan Feature 🦾 For certain actions, such as rebasing branches, Mergify has to impersonate a GitHub
+      * user. You can specify the account to use with this option. If no update_bot_account is set, Mergify picks
+      * randomly one of the organization users instead. The user account must have already been logged in Mergify
+      * dashboard once. This option overrides the value defined in the Queue Rules section of the configuration.
       */
     updateBotAccount: String = "",
-    /** Deprecated 😵 Method to use to update the pull request with its base branch when the speculative check is done
-      * in-place. Possible values: * merge to merge the base branch into the pull request. * rebase to rebase the pull
-      * request against its base branch. Note that the rebase method has some drawbacks, see Using Rebase to Update.
-      * This option has been moved under the Queue Rules section of the configuration and will be removed from this
-      * section in the future.
+    /** merge for all merge methods except fast-forward where rebase is used | Method to use to update the pull request
+      * with its base branch when the | speculative check is done in-place. | Possible values: | | * merge to merge the
+      * base branch into the pull request. | * rebase to rebase the pull request against its base branch. | | Note that
+      * the rebase method has some drawbacks, see Using Rebase to Update. | | This option overrides the value defined in
+      * the Queue Rules section of the configuration.
       */
-    updateMethod: String = "merge for all merge methods except fast-forward where rebase is used"
+    updateMethod: String = ""
   ) extends Action
 
 
