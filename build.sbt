@@ -55,13 +55,15 @@ lazy val writer =
     .jvmPlatform(List(Scala212, Scala213))
     .dependsOn(`generated-models`)
     .settings(
-      name                                    := "mergify-writer",
-      libraryDependencies += "io.circe"       %% "circe-yaml"           % "0.14.1",
-      libraryDependencies += "io.circe"       %% "circe-generic-extras" % "0.14.1",
-      libraryDependencies += "com.propensive" %% "magnolia"             % "0.17.0",
-      libraryDependencies += "org.scala-lang"  % "scala-reflect"        % scalaVersion.value % Provided,
-      libraryDependencies += "com.lihaoyi"    %% "requests"             % "0.8.0"            % Test,
-      libraryDependencies += "org.scalameta"  %% "munit"                % "0.7.29"           % Test
+      name := "mergify-writer",
+      libraryDependencies ++= Seq(
+        "io.circe"                     %% "circe-yaml"           % "0.14.1",
+        "io.circe"                     %% "circe-generic-extras" % "0.14.1",
+        "com.softwaremill.magnolia1_2" %% "magnolia"             % "1.1.3",
+        "org.scala-lang"                % "scala-reflect"        % scalaVersion.value % Provided,
+        "com.lihaoyi"                  %% "requests"             % "0.8.0"            % Test,
+        "org.scalameta"                %% "munit"                % "0.7.29"           % Test
+      )
     )
 
 //noinspection SpellCheckingInspection
