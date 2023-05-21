@@ -2,8 +2,10 @@ package io.github.nafg.mergify
 
 import java.time.Duration
 
+import io.github.nafg.mergify.CirceConfig.snakeCase
+
 import io.circe.Encoder
-import io.circe.derivation.{deriveEncoder, renaming}
+import io.circe.generic.extras.semiauto.deriveConfiguredEncoder
 
 case class QueueRule(name: String,
                      conditions: Seq[Condition],
@@ -26,5 +28,5 @@ object QueueRule {
         .map(_.productIterator.mkString(" "))
         .mkString(" ")
     }
-  implicit val encodeQueueRule: Encoder[QueueRule] = deriveEncoder(renaming.snakeCase)
+  implicit val encodeQueueRule: Encoder[QueueRule] = deriveConfiguredEncoder
 }
