@@ -20,5 +20,5 @@ An SBT plugin that pulls in `sbt-github-actions` but also overrides `githubWorkf
 To use it add to `project/plugins.sbt`
 
 ```scala
-addSbtPlugin("io.github.nafg.mergify" % "sbt-mergify-github-actions" % "0.4.0")
+addSbtPlugin("io.github.nafg.mergify" % "sbt-mergify-github-actions" % "0.7.0")
 ```
