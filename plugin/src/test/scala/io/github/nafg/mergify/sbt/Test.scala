@@ -35,7 +35,8 @@ class Test extends munit.FunSuite {
         |      - author=scala-steward
         |      - check-success=Build and Test (ubuntu-latest, 2.13.7, temurin@11)
         |    actions:
-        |        queue: {}
+        |        queue:
+        |            name: default
         |""".stripMargin,
       mergify.toYaml
     )
@@ -62,7 +63,8 @@ class Test extends munit.FunSuite {
         |              - assignee=someone
         |          - -draft
         |    actions:
-        |        queue: {}
+        |        queue:
+        |            name: default
         |""".stripMargin,
       thing.toYaml
     )
@@ -92,7 +94,8 @@ class Test extends munit.FunSuite {
          |      - check-success=Build (ubuntu-latest, $scalaVersion1, temurin@11)
          |      - check-success=Build (ubuntu-latest, $scalaVersion2, temurin@11)
          |    actions:
-         |        queue: {}
+         |        queue:
+         |            name: default
          |""".stripMargin,
       WriteMergify.buildMergify(conditions).toYaml
     )
