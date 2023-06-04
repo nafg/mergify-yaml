@@ -75,6 +75,6 @@ lazy val plugin =
       name               := "sbt-mergify-github-actions",
       sbtPlugin          := true,
       crossScalaVersions := List(Scala212),
-      addSbtPlugin("com.codecommit" % "sbt-github-actions" % "0.14.2"),
+      addSbtPlugin("com.github.sbt" % "sbt-github-actions" % "0.15.0"),
       libraryDependencies += "org.scalameta" %% "munit" % "0.7.29" % Test
     )
