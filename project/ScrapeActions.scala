@@ -53,8 +53,8 @@ object ScrapeActions {
     followMetaRefresh(originalUrlString)
   }
 
-  def run() = {
-    val baseUrl = new URL("https://docs.mergify.io/actions/index.html")
+  def run(): List[String] = {
+    val baseUrl = new URL("https://docs.mergify.com/actions/index.html")
     val index   = getJsoupDocument(baseUrl)
 
     val actionPages =
@@ -66,8 +66,8 @@ object ScrapeActions {
         .map(baseUrl.toURI.resolve(_).toURL)
 
     val actionDocs = {
-      implicit val executionContext =
-        ExecutionContext.fromExecutor(Executors.newFixedThreadPool(4))
+      implicit val executionContext: ExecutionContext =
+        ExecutionContext.fromExecutor(Executors.newFixedThreadPool(1))
       Await.result(
         Future.traverse(actionPages) { url =>
           Future {
@@ -120,7 +120,7 @@ object ScrapeActions {
 
       mkComment(description, "") +
         "case class " + name +
-        (for (List(name, typ, default, description) <- rows) yield {
+        (for (case List(name, typ, default, description) <- rows) yield {
           val camelCaseName = (name.split('_').toList match {
             case Nil          => ""
             case head :: tail => head + tail.map(_.capitalize).mkString
