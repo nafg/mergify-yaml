@@ -1,33 +1,60 @@
+import org.jsoup.helper.HttpConnection
+import org.jsoup.nodes.Document
+import org.jsoup.{Connection, HttpStatusException}
+
 import java.net.URL
 import java.util.concurrent.Executors
-
 import scala.annotation.tailrec
-import scala.collection.JavaConverters._
-import scala.concurrent.duration._
+import scala.collection.JavaConverters.*
+import scala.concurrent.duration.*
 import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.util.{Failure, Success}
-
-import org.jsoup.Jsoup
-import org.jsoup.nodes.Document
 
 /** Scrape the available set of actions from the Mergify website
   */
 object ScrapeActions {
-  @tailrec
   def getJsoupDocument(url: URL): Document = {
-    val urlString = url.toString
-    val doc       = Jsoup.connect(urlString).followRedirects(true).get()
-    val canonical = doc.select("html > head > link[rel=canonical]").first()
-    if (canonical == null) doc
-    else {
-      val href = new URL(canonical.attr("href"))
-      if (href.equals(url)) doc
-      else getJsoupDocument(href)
+    val originalUrlString = url.toString
+
+    @tailrec
+    def get(urlString: String): Document = {
+      println(s"[$originalUrlString] Getting " + urlString)
+      val connection = new HttpConnection()
+      connection.url(urlString).followRedirects(true).method(Connection.Method.GET).ignoreHttpErrors(true)
+      connection.execute()
+      connection.response().statusCode() match {
+        case s if s >= 200 && s < 300 => connection.response().parse()
+        case 429 =>
+          val retryAfter = connection.response().header("Retry-After").toInt
+          Console.err.println(s"[$originalUrlString] Too many requests, waiting $retryAfter seconds...")
+          Thread.sleep(retryAfter * 1000)
+          get(urlString)
+        case s =>
+          val message = s"HTTP error fetching URL (${connection.response().statusMessage()})"
+          throw new HttpStatusException(message, s, urlString)
+      }
     }
+
+    @tailrec
+    def followMetaRefresh(urlString: String): Document = {
+      val doc = get(urlString)
+      val canonical = doc.select("html > head > meta[http-equiv=refresh]").first()
+      if (canonical == null) doc
+      else {
+        val href = canonical.attr("content").split("=").last
+        if (href.equals(urlString)) doc
+        else {
+          println(s"[$originalUrlString] Following to $href")
+          followMetaRefresh(href)
+        }
+      }
+    }
+
+    followMetaRefresh(originalUrlString)
   }
 
-  def run() = {
-    val baseUrl = new URL("https://docs.mergify.io/actions/index.html")
+  def run(): List[String] = {
+    val baseUrl = new URL("https://docs.mergify.com/actions/index.html")
     val index   = getJsoupDocument(baseUrl)
 
     val actionPages =
@@ -39,8 +66,8 @@ object ScrapeActions {
         .map(baseUrl.toURI.resolve(_).toURL)
 
     val actionDocs = {
-      implicit val executionContext =
-        ExecutionContext.fromExecutor(Executors.newFixedThreadPool(4))
+      implicit val executionContext: ExecutionContext =
+        ExecutionContext.fromExecutor(Executors.newFixedThreadPool(1))
       Await.result(
         Future.traverse(actionPages) { url =>
           Future {
@@ -93,7 +120,7 @@ object ScrapeActions {
 
       mkComment(description, "") +
         "case class " + name +
-        (for (List(name, typ, default, description) <- rows) yield {
+        (for (case List(name, typ, default, description) <- rows) yield {
           val camelCaseName = (name.split('_').toList match {
             case Nil          => ""
             case head :: tail => head + tail.map(_.capitalize).mkString
