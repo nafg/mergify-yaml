@@ -4,6 +4,7 @@ val Scala212 = "2.12.17"
 val Scala213 = "2.13.10"
 
 ThisBuild / scalacOptions += "-feature"
+ThisBuild / scalacOptions += "-Xsource:3"
 ThisBuild / organization := "io.github.nafg.mergify"
 
 mergifyExtraConditions := Seq(
