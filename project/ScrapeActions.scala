@@ -37,7 +37,7 @@ object ScrapeActions {
 
     @tailrec
     def followMetaRefresh(urlString: String): Document = {
-      val doc = get(urlString)
+      val doc       = get(urlString)
       val canonical = doc.select("html > head > meta[http-equiv=refresh]").first()
       if (canonical == null) doc
       else {
