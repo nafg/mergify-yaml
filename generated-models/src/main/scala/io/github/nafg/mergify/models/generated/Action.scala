@@ -167,6 +167,15 @@ object Action {
   ) extends Action
 
 
+  /** The github_actions action dispatches an existing workflow of the repository.
+    */
+  case class GithubActions(
+    /** The dispatch configuration.
+      */
+    workflow: ToJson /*Dispatch*/
+  ) extends Action
+
+
   /** The label action can add or remove labels from a pull request.
     */
   case class Label(
