@@ -1,2 +1,2 @@
-libraryDependencies += "org.jsoup" % "jsoup" % "1.17.1"
+libraryDependencies += "org.jsoup" % "jsoup" % "1.17.2"
 scalacOptions += "-Xsource:3"
