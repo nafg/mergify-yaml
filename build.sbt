@@ -1,7 +1,7 @@
 import _root_.io.github.nafg.mergify.dsl._
 
 val Scala212 = "2.12.18"
-val Scala213 = "2.13.12"
+val Scala213 = "2.13.13"
 
 ThisBuild / scalacOptions += "-feature"
 ThisBuild / scalacOptions += "-Xsource:3"
