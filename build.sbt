@@ -62,7 +62,7 @@ lazy val writer =
         "io.circe"                     %% "circe-generic-extras" % "0.14.3",
         "com.softwaremill.magnolia1_2" %% "magnolia"             % "1.1.8",
         "org.scala-lang"                % "scala-reflect"        % scalaVersion.value % Provided,
-        "com.lihaoyi"                  %% "requests"             % "0.8.0"            % Test,
+        "com.lihaoyi"                  %% "requests"             % "0.8.2"            % Test,
         "org.scalameta"                %% "munit"                % "0.7.29"           % Test
       )
     )
