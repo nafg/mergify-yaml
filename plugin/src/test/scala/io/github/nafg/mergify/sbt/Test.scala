@@ -71,7 +71,7 @@ class Test extends munit.FunSuite {
   }
 
   test("Multiple alternatives") {
-    val scalaVersion1 = "2.13.13"
+    val scalaVersion1 = "2.13.14"
     val scalaVersion2 = "3.2.0"
     val jobs =
       List(
