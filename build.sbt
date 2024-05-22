@@ -63,7 +63,7 @@ lazy val writer =
         "com.softwaremill.magnolia1_2" %% "magnolia"             % "1.1.9",
         "org.scala-lang"                % "scala-reflect"        % scalaVersion.value % Provided,
         "com.lihaoyi"                  %% "requests"             % "0.8.2"            % Test,
-        "org.scalameta"                %% "munit"                % "0.7.29"           % Test
+        "org.scalameta"                %% "munit"                % "1.0.0"            % Test
       )
     )
 
@@ -77,5 +77,5 @@ lazy val plugin =
       sbtPlugin          := true,
       crossScalaVersions := List(Scala212),
       addSbtPlugin("com.github.sbt" % "sbt-github-actions" % "0.23.0"),
-      libraryDependencies += "org.scalameta" %% "munit" % "0.7.29" % Test
+      libraryDependencies += "org.scalameta" %% "munit" % "1.0.0" % Test
     )
