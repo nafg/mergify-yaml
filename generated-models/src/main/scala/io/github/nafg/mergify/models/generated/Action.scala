@@ -29,30 +29,37 @@ object Action {
       */
     assignees: Seq[String],
     /** The pull request body.
+  Default: "{{ body }} This is an automatic backport of pull request #{{number}} done by
+      * [Mergify](https://mergify.com)."
       */
-    body: String = "{{ body }} This is an automatic backport of pull request #{{number}} done by [Mergify](https://mergify.com).",
+    body: Option[String] = None,
     /** Mergify can impersonate a GitHub user to backport a pull request. If no bot_account is set, Mergify backports
       * the pull request itself.
       */
     botAccount: String = "",
     /** The list of branches the pull request should be copied to.
+  Default: []
       */
-    branches: Seq[String] = Nil,
+    branches: Option[Seq[String]] = None,
     /** Whether to create the pull requests even if they are conflicts when cherry-picking the commits.
+  Default: true
       */
-    ignoreConflicts: Boolean = true,
+    ignoreConflicts: Option[Boolean] = None,
     /** The list of labels to add to the created pull requests.
       */
     labels: Seq[String],
     /** The label to add to the created pull request if it has conflicts and ignore_conflicts is set to true.
+  Default:
+      * conflicts
       */
-    labelConflicts: String = "conflicts",
+    labelConflicts: Option[String] = None,
     /** The list of regexes to find branches the pull request should be copied to.
       */
     regexes: Seq[String],
     /** The pull request title.
+  Default: "{{ title }} (backport #{{ number }})"
       */
-    title: String = "{{ title }} (backport #{{ number }})",
+    title: Option[String] = None,
     /** List of reporting modes for the action's result.
   Default: - check
       */
@@ -64,8 +71,10 @@ object Action {
     */
   case class Close(
     /** The message to write as a comment after closing the pull request.
+  Default: This pull request has been
+      * automatically closed by Mergify.
       */
-    message: String = "This pull request has been automatically closed by Mergify."
+    message: Option[String] = None
   ) extends Action
 
 
@@ -77,8 +86,10 @@ object Action {
       */
     assignees: Seq[String],
     /** The pull request body.
+  Default: "{{ body }} This is an automatic copy of pull request #{{number}} done by
+      * [Mergify](https://mergify.com)."
       */
-    body: String = "{{ body }} This is an automatic copy of pull request #{{number}} done by [Mergify](https://mergify.com).",
+    body: Option[String] = None,
     /** Mergify can impersonate a GitHub user to copy a pull request. If no bot_account is set, Mergify copies the pull
       * request itself.
       */
@@ -87,20 +98,24 @@ object Action {
       */
     branches: Seq[String],
     /** Whether to create the pull requests even if they are conflicts when cherry-picking the commits.
+  Default: true
       */
-    ignoreConflicts: Boolean = true,
+    ignoreConflicts: Option[Boolean] = None,
     /** The list of labels to add to the created pull requests.
       */
     labels: Seq[String],
     /** The label to add to the created pull request if it has conflicts and ignore_conflicts is set to true.
+  Default:
+      * conflicts
       */
-    labelConflicts: String = "conflicts",
+    labelConflicts: Option[String] = None,
     /** The list of regexes to find branches the pull request should be copied to.
       */
     regexes: Seq[String],
     /** The pull request title.
+  Default: "{{ title }} (copy #{{ number }})"
       */
-    title: String = "{{ title }} (copy #{{ number }})",
+    title: Option[String] = None,
     /** List of reporting modes for the action's result.
   Default: - check
       */
@@ -149,8 +164,9 @@ object Action {
       */
     changesRequested: Option[ToJson /*boolean, from_requested_reviewers or list of GitHub login*/] = None,
     /** The message to post when dismissing the review.
+  Default: Pull request has been modified.
       */
-    message: String = "Pull request has been modified.",
+    message: Option[String] = None,
     /** If set to synchronize, the action will run only if the pull request commits changed. Otherwise, it will run each
       * time the rule matches.
   Default: synchronize
@@ -239,8 +255,9 @@ object Action {
     /** This option is relevant only if you do inplace checks and if you use the rebase option of the update_method. It
       * will automatically squash your commits beginning by squash!, fixup! or amend!, just like the option with the
       * same name when doing a git rebase.
+  Default: true
       */
-    autosquash: Boolean = true,
+    autosquash: Option[Boolean] = None,
     /** Template to use as the commit message when using the merge or squash merge method. This option has been moved
       * under the queue rules section of the configuration and will be removed from this section in the future.
       */
@@ -286,8 +303,9 @@ object Action {
     */
   case class Rebase(
     /** When set to True, commits starting with fixup!, squash! and amend!are squashed during the rebase.
+  Default: true
       */
-    autosquash: Boolean = true,
+    autosquash: Option[Boolean] = None,
     /** To rebase, Mergify needs to impersonate a GitHub user. You can specify the account to use with this option. If
       * no bot_account is set, Mergify picks the pull request author. The user account must have already been logged in
       * Mergify dashboard once.
