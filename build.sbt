@@ -58,7 +58,7 @@ lazy val writer =
     .settings(
       name := "mergify-writer",
       libraryDependencies ++= Seq(
-        "io.circe"                     %% "circe-yaml"           % "0.14.1",
+        "io.circe"                     %% "circe-yaml"           % "1.15.0",
         "io.circe"                     %% "circe-generic-extras" % "0.14.3",
         "com.softwaremill.magnolia1_2" %% "magnolia"             % "1.1.9",
         "org.scala-lang"                % "scala-reflect"        % scalaVersion.value % Provided,
