@@ -54,15 +54,16 @@ object ScrapeActions {
   }
 
   def run(): List[String] = {
-    val baseUrl = new URL("https://docs.mergify.com/actions/index.html")
+    val baseUrl = new URL("https://docs.mergify.com/")
     val index   = getJsoupDocument(baseUrl)
 
     val actionPages =
       index
-        .select("#actions > .use-cases a")
+        .select("a")
         .eachAttr("href")
         .asScala
         .toList
+        .filter(_.startsWith("/workflow/actions/"))
         .map(baseUrl.toURI.resolve(_).toURL)
 
     val actionDocs = {
@@ -89,7 +90,8 @@ object ScrapeActions {
       val name        = h1.ownText().split('_').map(_.capitalize).mkString
       val description = h1.nextElementSibling().text().trim
 
-      val table = doc.select("table").first()
+      val parametersHeader = doc.select("h2#parameters").first()
+      val table            = parametersHeader.parent().nextElementSiblings().select("table").first()
 
       val rows =
         if (table == null)
@@ -119,8 +121,8 @@ object ScrapeActions {
             .mkString(s"$indent/** ", s"\n$indent  * ", s"\n$indent  */\n")
 
       mkComment(description, "") +
-        "case class " + name +
-        (for (case List(name, typ, default, description) <- rows) yield {
+        "case class " + name.replace(" ", "") +
+        (for (case List(List(name, typ, default*), List(description)) <- rows.grouped(2)) yield {
           val camelCaseName = (name.split('_').toList match {
             case Nil          => ""
             case head :: tail => head + tail.map(_.capitalize).mkString
@@ -130,16 +132,17 @@ object ScrapeActions {
           }
 
           val baseScalaType = typ match {
-            case "list of string" | "list of Template" => "Seq[String]"
-            case "Boolean"                             => "Boolean"
-            case "string" | "Template"                 => "String"
+            case "list of string" | "list of template" | "list of branch names"                => "Seq[String]"
+            case "boolean"                                                                     => "Boolean"
+            case "string" | "template" | "merge method: merge, squash, rebase or fast-forward" => "String"
+            case other if other.startsWith("list of ") => "Seq[ToJson /*" + other.stripPrefix("list of ") + "*/]"
             case other                                 => "ToJson /*" + other + "*/"
           }
 
           val (scalaTypeAndDefault, commentDefault) =
-            (baseScalaType, default.trim) match {
-              case ("String", s)                       => (baseScalaType + s""" = "$s"""", None)
-              case ("Seq[String]", "[]")               => (baseScalaType + " = Nil", None)
+            (baseScalaType, default.headOption.getOrElse("").trim) match {
+              case ("String", s)         => (baseScalaType + s""" = "${s.stripPrefix("\"").stripSuffix("\"")}"""", None)
+              case ("Seq[String]", "[]") => (baseScalaType + " = Nil", None)
               case ("Boolean", d @ ("true" | "false")) => (baseScalaType + " = " + d, None)
               case (_, "")                             => (baseScalaType, None)
               case (_, d)                              => (s"Option[$baseScalaType] = None", Some(d))
