@@ -141,11 +141,9 @@ object ScrapeActions {
 
           val (scalaTypeAndDefault, commentDefault) =
             (baseScalaType, default.headOption.getOrElse("").trim) match {
-              case ("String", s)         => (baseScalaType + s""" = "${s.stripPrefix("\"").stripSuffix("\"")}"""", None)
-              case ("Seq[String]", "[]") => (baseScalaType + " = Nil", None)
-              case ("Boolean", d @ ("true" | "false")) => (baseScalaType + " = " + d, None)
-              case (_, "")                             => (baseScalaType, None)
-              case (_, d)                              => (s"Option[$baseScalaType] = None", Some(d))
+              case ("String", "") => (s"""$baseScalaType = """"", None)
+              case (_, "")        => (baseScalaType, None)
+              case (_, d)         => (s"Option[$baseScalaType] = None", Some(d))
             }
 
           val defaultMsg = commentDefault.fold("")("\nDefault: " + _)
