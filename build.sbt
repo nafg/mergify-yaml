@@ -60,7 +60,7 @@ lazy val writer =
       libraryDependencies ++= Seq(
         "io.circe"                     %% "circe-yaml"           % "1.15.0",
         "io.circe"                     %% "circe-generic-extras" % "0.14.3",
-        "com.softwaremill.magnolia1_2" %% "magnolia"             % "1.1.9",
+        "com.softwaremill.magnolia1_2" %% "magnolia"             % "1.1.10",
         "org.scala-lang"                % "scala-reflect"        % scalaVersion.value % Provided,
         "com.lihaoyi"                  %% "requests"             % "0.8.2"            % Test,
         "org.scalameta"                %% "munit"                % "1.0.0"            % Test
