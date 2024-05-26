@@ -28,7 +28,7 @@ class Test extends munit.FunSuite {
       """defaults: {}
         |queue_rules:
         |  - name: default
-        |    conditions: []
+        |    merge_conditions: []
         |pull_request_rules:
         |  - name: Automatically merge successful Scala Steward PRs
         |    conditions:
@@ -53,7 +53,7 @@ class Test extends munit.FunSuite {
       """defaults: {}
         |queue_rules:
         |  - name: default
-        |    conditions: []
+        |    merge_conditions: []
         |pull_request_rules:
         |  - name: name
         |    conditions:
@@ -93,7 +93,7 @@ class Test extends munit.FunSuite {
       s"""defaults: {}
          |queue_rules:
          |  - name: default
-         |    conditions: []
+         |    merge_conditions: []
          |pull_request_rules:
          |  - name: Automatically merge successful Scala Steward PRs
          |    conditions:

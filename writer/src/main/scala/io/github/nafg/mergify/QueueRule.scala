@@ -8,7 +8,7 @@ import io.circe.Encoder
 import io.circe.generic.extras.semiauto.deriveConfiguredEncoder
 
 case class QueueRule(name: String,
-                     conditions: Seq[Condition],
+                     mergeConditions: Seq[Condition],
                      speculativeChecks: Option[Int] = None,
                      allowInplaceSpeculativeChecks: Option[Boolean] = None,
                      allowSpeculativeChecksInterruption: Option[Boolean] = None,
