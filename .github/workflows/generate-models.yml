@@ -16,7 +16,7 @@ jobs:
           fetch-depth: 0
           ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - uses: actions/setup-java@v3
+      - uses: actions/setup-java@v4
         with:
           distribution: adopt
           java-version: 8
