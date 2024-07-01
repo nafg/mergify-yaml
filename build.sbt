@@ -21,7 +21,7 @@ lazy val `generated-models` =
   projectMatrix
     .jvmPlatform(List(Scala212, Scala213))
     .settings(
-      libraryDependencies += "io.circe" %% "circe-core" % "0.14.8",
+      libraryDependencies += "io.circe" %% "circe-core" % "0.14.9",
       generateModels := {
         val dir  = (Compile / scalaSource).value / "io/github/nafg/mergify/models/generated"
         val file = dir / "Action.scala"
