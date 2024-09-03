@@ -25,7 +25,7 @@ jobs:
       - run: sbt generateModels
 
       - name: Create pull request
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@v7
         with:
           commit-message: Regenerated models
           title: Regenerated models
