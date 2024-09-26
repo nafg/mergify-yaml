@@ -1,0 +1,8 @@
+changelog:
+  categories:
+    - title: Highlights 🎉
+      labels:
+        - release-highlight
+    - title: Other Changes
+      labels:
+        - "*"
