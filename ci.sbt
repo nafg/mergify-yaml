@@ -6,8 +6,9 @@ inThisBuild(
       Developer("nafg", "Naftoli Gugenheim", "98384+nafg@users.noreply.github.com", url("https://github.com/nafg"))
     ),
     dynverGitDescribeOutput ~= (_.map(o => o.copy(dirtySuffix = sbtdynver.GitDirtySuffix("")))),
-    dynverSonatypeSnapshots    := true,
-    githubWorkflowJavaVersions := Seq(JavaSpec.temurin("11")),
+    dynverSonatypeSnapshots     := true,
+    githubWorkflowJavaVersions  := Seq(JavaSpec.temurin("11")),
+    githubWorkflowScalaVersions := List("2.12.x"),
     githubWorkflowTargetTags ++= Seq("v*"),
     githubWorkflowPublishTargetBranches := Seq(RefPredicate.StartsWith(Ref.Tag("v"))),
     githubWorkflowPublish := Seq(
