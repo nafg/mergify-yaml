@@ -15,7 +15,7 @@ object WriteMergify extends AutoPlugin {
   // noinspection ScalaWeakerAccess
   object autoImport {
     val mergifyExtraConditions = settingKey[Seq[Condition]]("Conditions required to merge other than passing the build")
-    val mergifyIncludedJobs = settingKey[Seq[WorkflowJob]](
+    val mergifyIncludedJobs    = settingKey[Seq[WorkflowJob]](
       "The generated jobs that have to pass to merge Scala Steward PRs"
     )
     val mergifyConditions = settingKey[Seq[Condition]]("The conditions for the Scala Steward PR rule")

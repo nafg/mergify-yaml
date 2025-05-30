@@ -24,7 +24,7 @@ object ScrapeActions {
       connection.execute()
       connection.response().statusCode() match {
         case s if s >= 200 && s < 300 => connection.response().parse()
-        case 429 =>
+        case 429                      =>
           val retryAfter = connection.response().header("Retry-After").toInt
           Console.err.println(s"[$originalUrlString] Too many requests, waiting $retryAfter seconds...")
           Thread.sleep(retryAfter * 1000)
@@ -75,7 +75,7 @@ object ScrapeActions {
             println("Scraping " + url)
             getJsoupDocument(url)
           }.andThen {
-            case Success(value) => println("Finished " + url)
+            case Success(value)     => println("Finished " + url)
             case Failure(exception) =>
               Console.err.println("Failed for " + url + ":")
               exception.printStackTrace()
