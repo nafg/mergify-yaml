@@ -37,8 +37,8 @@ object Condition {
   case class Or(conditions: Condition*)  extends Condition
 
   private def encodeConditionImpl: Encoder[Condition] = Encoder.instance {
-    case And(conditions @ _*) => Json.obj("and" := conditions.asJson)
-    case Or(conditions @ _*)  => Json.obj("or" := conditions.asJson)
+    case And(conditions @ _*)                          => Json.obj("and" := conditions.asJson)
+    case Or(conditions @ _*)                           => Json.obj("or" := conditions.asJson)
     case Simple(attribute, test, negated, lengthBased) =>
       Json.fromString(
         (if (negated) "-" else "") +
