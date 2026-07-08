@@ -5,7 +5,7 @@ import scala.language.implicitConversions
 object dsl {
   implicit def boolAttributeToCondition(attribute: Attribute[Boolean]): Condition = Condition.Simple(attribute)
 
-  protected class conditionBuilder(attribute: Attribute[_], operator: Operator) {
+  protected class conditionBuilder(attribute: Attribute[?], operator: Operator) {
     def apply(value: String) = Condition.Simple(attribute, Some(operator -> value))
   }
 
