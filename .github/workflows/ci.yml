@@ -24,7 +24,7 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         scala: [2.12.x]
-        java: [temurin@11]
+        java: [temurin@17]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout current branch (full)
@@ -32,12 +32,12 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup Java (temurin@11)
-        if: matrix.java == 'temurin@11'
+      - name: Setup Java (temurin@17)
+        if: matrix.java == 'temurin@17'
         uses: actions/setup-java@v5
         with:
           distribution: temurin
-          java-version: 11
+          java-version: 17
           cache: sbt
 
       - name: Setup sbt
@@ -50,7 +50,7 @@ jobs:
         run: sbt '++ ${{ matrix.scala }}; test'
 
       - name: Compress target directories
-        run: tar cf targets.tar writer/target/jvm-2.13 writer/target/jvm-2.12 generated-models/target/jvm-2.13 target generated-models/target/jvm-2.12 plugin/target/jvm-2.12 project/target
+        run: tar cf targets.tar plugin/target/jvm-3 writer/target/jvm-2.13 writer/target/jvm-2.12 generated-models/target/jvm-2.13 writer/target/jvm-3 target generated-models/target/jvm-2.12 generated-models/target/jvm-3 plugin/target/jvm-2.12 project/target
 
       - name: Upload target directories
         uses: actions/upload-artifact@v7
@@ -66,7 +66,7 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         scala: [2.12.21]
-        java: [temurin@11]
+        java: [temurin@17]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout current branch (full)
@@ -74,12 +74,12 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup Java (temurin@11)
-        if: matrix.java == 'temurin@11'
+      - name: Setup Java (temurin@17)
+        if: matrix.java == 'temurin@17'
         uses: actions/setup-java@v5
         with:
           distribution: temurin
-          java-version: 11
+          java-version: 17
           cache: sbt
 
       - name: Setup sbt
