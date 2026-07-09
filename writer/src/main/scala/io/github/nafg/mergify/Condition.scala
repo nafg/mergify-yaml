@@ -5,28 +5,28 @@ import io.circe.{Encoder, Json}
 
 sealed trait Condition {
   final def &&(that: Condition) = (this, that) match {
-    case (Condition.And(conditions1 @ _*), Condition.And(conditions2 @ _*)) =>
+    case (Condition.And(conditions1*), Condition.And(conditions2*)) =>
       Condition.And(
-        conditions1 ++
-          conditions2: _*
+        (conditions1 ++
+          conditions2)*
       )
-    case (Condition.And(conditions1 @ _*), other2) => Condition.And(conditions1 :+ other2: _*)
-    case (other1, Condition.And(conditions2 @ _*)) => Condition.And(other1 +: conditions2: _*)
-    case (other1, other2)                          => Condition.And(other1, other2)
+    case (Condition.And(conditions1*), other2) => Condition.And((conditions1 :+ other2)*)
+    case (other1, Condition.And(conditions2*)) => Condition.And((other1 +: conditions2)*)
+    case (other1, other2)                      => Condition.And(other1, other2)
   }
   final def ||(that: Condition) = (this, that) match {
-    case (Condition.Or(conditions1 @ _*), Condition.Or(conditions2 @ _*)) =>
+    case (Condition.Or(conditions1*), Condition.Or(conditions2*)) =>
       Condition.Or(
         conditions1 ++
           conditions2: _*
       )
-    case (Condition.Or(conditions1 @ _*), other2) => Condition.Or(conditions1 :+ other2: _*)
-    case (other1, Condition.Or(conditions2 @ _*)) => Condition.Or(other1 +: conditions2: _*)
-    case (other1, other2)                         => Condition.Or(other1, other2)
+    case (Condition.Or(conditions1*), other2) => Condition.Or((conditions1 :+ other2)*)
+    case (other1, Condition.Or(conditions2*)) => Condition.Or((other1 +: conditions2)*)
+    case (other1, other2)                     => Condition.Or(other1, other2)
   }
 }
 object Condition {
-  case class Simple(attribute: Attribute[_],
+  case class Simple(attribute: Attribute[?],
                     test: Option[(Operator, String)] = None,
                     negated: Boolean = false,
                     lengthBased: Boolean = false)
@@ -37,8 +37,8 @@ object Condition {
   case class Or(conditions: Condition*)  extends Condition
 
   private def encodeConditionImpl: Encoder[Condition] = Encoder.instance {
-    case And(conditions @ _*)                          => Json.obj("and" := conditions.asJson)
-    case Or(conditions @ _*)                           => Json.obj("or" := conditions.asJson)
+    case And(conditions*)                              => Json.obj("and" := conditions.asJson)
+    case Or(conditions*)                               => Json.obj("or" := conditions.asJson)
     case Simple(attribute, test, negated, lengthBased) =>
       Json.fromString(
         (if (negated) "-" else "") +
