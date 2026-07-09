@@ -2,6 +2,7 @@ import _root_.io.github.nafg.mergify.dsl._
 
 val Scala212 = "2.12.21"
 val Scala213 = "2.13.18"
+val Scala3   = "3.8.4"
 
 ThisBuild / scalacOptions += "-feature"
 ThisBuild / scalacOptions += "-Xsource:3"
@@ -19,7 +20,7 @@ val generateModels = taskKey[File]("Generate the models by scraping the document
 
 lazy val `generated-models` =
   projectMatrix
-    .jvmPlatform(List(Scala212, Scala213))
+    .jvmPlatform(List(Scala212, Scala213, Scala3))
     .settings(
       libraryDependencies += "io.circe" %% "circe-core" % "0.14.16",
       generateModels                    := {
@@ -53,28 +54,47 @@ lazy val `generated-models` =
 
 lazy val writer =
   projectMatrix
-    .jvmPlatform(List(Scala212, Scala213))
+    .jvmPlatform(List(Scala212, Scala213, Scala3))
     .dependsOn(`generated-models`)
     .settings(
       name := "mergify-writer",
+      libraryDependencies ++= {
+        scalaBinaryVersion.value match {
+          case "3" =>
+            Seq(
+              "com.softwaremill.magnolia1_3" %% "magnolia" % "1.3.21"
+            )
+          case _ =>
+            Seq(
+              "org.scala-lang"                % "scala-reflect" % scalaVersion.value % Provided,
+              "com.softwaremill.magnolia1_2" %% "magnolia"      % "1.1.14"
+            )
+        }
+      },
       libraryDependencies ++= Seq(
-        "io.circe"                     %% "circe-yaml"           % "1.15.0",
-        "io.circe"                     %% "circe-generic-extras" % "0.14.4",
-        "com.softwaremill.magnolia1_2" %% "magnolia"             % "1.1.14",
-        "org.scala-lang"                % "scala-reflect"        % scalaVersion.value % Provided,
-        "com.lihaoyi"                  %% "requests"             % "0.9.3"            % Test,
-        "org.scalameta"                %% "munit"                % "1.3.3"            % Test
+        "io.circe"      %% "circe-yaml"           % "1.15.0",
+        "io.circe"      %% "circe-generic-extras" % "0.14.5-RC1",
+        "com.lihaoyi"   %% "requests"             % "0.9.3" % Test,
+        "org.scalameta" %% "munit"                % "1.3.3" % Test
       )
     )
 
 //noinspection SpellCheckingInspection
 lazy val plugin =
   projectMatrix
-    .jvmPlatform(List(Scala212))
+    .jvmPlatform(List(Scala212, Scala3))
     .dependsOn(writer)
     .settings(
-      name      := "sbt-mergify-github-actions",
-      sbtPlugin := true,
+      name                          := "sbt-mergify-github-actions",
+      sbtPlugin                     := true,
+      pluginCrossBuild / sbtVersion := {
+        scalaBinaryVersion.value match {
+          case "2.12" =>
+            sbtVersion.value
+          case "3" =>
+            "2.0.1"
+        }
+      },
       addSbtPlugin("com.github.sbt" % "sbt-github-actions" % "0.31.0"),
       libraryDependencies += "org.scalameta" %% "munit" % "1.3.3" % Test
     )
