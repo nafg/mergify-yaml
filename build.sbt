@@ -62,7 +62,7 @@ lazy val writer =
         scalaBinaryVersion.value match {
           case "3" =>
             Seq(
-              "com.softwaremill.magnolia1_3" %% "magnolia" % "1.3.21"
+              "com.softwaremill.magnolia1_3" %% "magnolia" % "1.3.22"
             )
           case _ =>
             Seq(
