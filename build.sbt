@@ -95,6 +95,6 @@ lazy val plugin =
             "2.0.1"
         }
       },
-      addSbtPlugin("com.github.sbt" % "sbt-github-actions" % "0.32.0"),
+      addSbtPlugin("com.github.sbt" % "sbt-github-actions" % "0.32.1"),
       libraryDependencies += "org.scalameta" %% "munit" % "1.3.6" % Test
     )

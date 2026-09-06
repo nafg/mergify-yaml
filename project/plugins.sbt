@@ -1,4 +1,4 @@
 addSbtPlugin("com.github.sbt"         % "sbt-ci-release"             % "1.12.1")
-addSbtPlugin("com.github.sbt"         % "sbt-github-actions"         % "0.32.0")
+addSbtPlugin("com.github.sbt"         % "sbt-github-actions"         % "0.32.1")
 addSbtPlugin("io.github.nafg.mergify" % "sbt-mergify-github-actions" % "0.9.1")
 addSbtPlugin("com.eed3si9n"           % "sbt-projectmatrix"          % "0.11.0")
