@@ -50,7 +50,7 @@ jobs:
         run: sbt '++ ${{ matrix.scala }}; test'
 
       - name: Compress target directories
-        run: tar cf targets.tar plugin/target/jvm-3 writer/target/jvm-2.13 writer/target/jvm-2.12 generated-models/target/jvm-2.13 writer/target/jvm-3 target generated-models/target/jvm-2.12 generated-models/target/jvm-3 plugin/target/jvm-2.12 project/target
+        run: tar cf targets.tar target/out/jvm project/target
 
       - name: Upload target directories
         uses: actions/upload-artifact@v7
@@ -65,7 +65,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        scala: [2.12.21]
+        scala: [3.8.4]
         java: [temurin@17]
     runs-on: ${{ matrix.os }}
     steps:
