@@ -9,7 +9,9 @@ val Scala3   = "3.9.0"
 val Sbt1 = "1.13.0"
 
 ThisBuild / scalacOptions += "-feature"
-ThisBuild / scalacOptions += "-Xsource:3"
+// A bare setting, so that each project evaluates it against its own Scala
+// version; Scala 3 has no -Xsource and warns about it.
+scalacOptions ++= (if (scalaBinaryVersion.value == "3") Nil else Seq("-Xsource:3"))
 ThisBuild / organization := "io.github.nafg.mergify"
 
 mergifyExtraConditions := Seq(

@@ -16,10 +16,7 @@ sealed trait Condition {
   }
   final def ||(that: Condition) = (this, that) match {
     case (Condition.Or(conditions1*), Condition.Or(conditions2*)) =>
-      Condition.Or(
-        conditions1 ++
-          conditions2: _*
-      )
+      Condition.Or((conditions1 ++ conditions2)*)
     case (Condition.Or(conditions1*), other2) => Condition.Or((conditions1 :+ other2)*)
     case (other1, Condition.Or(conditions2*)) => Condition.Or((other1 +: conditions2)*)
     case (other1, other2)                     => Condition.Or(other1, other2)

@@ -5,7 +5,7 @@ import org.jsoup.{Connection, HttpStatusException}
 import java.net.URL
 import java.util.concurrent.Executors
 import scala.annotation.tailrec
-import scala.collection.JavaConverters.*
+import scala.jdk.CollectionConverters.*
 import scala.concurrent.duration.*
 import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.util.{Failure, Success}
