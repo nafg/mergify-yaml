@@ -4,8 +4,14 @@ val Scala212 = "2.12.21"
 val Scala213 = "2.13.18"
 val Scala3   = "3.9.0"
 
+// The sbt version the sbt 1 artifact is built against; the sbt 2 artifact
+// follows whatever sbt is running this build.
+val Sbt1 = "1.13.0"
+
 ThisBuild / scalacOptions += "-feature"
-ThisBuild / scalacOptions += "-Xsource:3"
+// A bare setting, so that each project evaluates it against its own Scala
+// version; Scala 3 has no -Xsource and warns about it.
+scalacOptions ++= (if (scalaBinaryVersion.value == "3") Nil else Seq("-Xsource:3"))
 ThisBuild / organization := "io.github.nafg.mergify"
 
 mergifyExtraConditions := Seq(
@@ -13,8 +19,8 @@ mergifyExtraConditions := Seq(
     (Attr.Author :== "nafg-scala-steward[bot]")
 )
 
-name           := "mergify-yaml"
-publish / skip := true
+LocalRootProject / name           := "mergify-yaml"
+LocalRootProject / publish / skip := true
 
 val generateModels = taskKey[File]("Generate the models by scraping the documentation")
 
@@ -23,7 +29,7 @@ lazy val `generated-models` =
     .jvmPlatform(List(Scala212, Scala213, Scala3))
     .settings(
       libraryDependencies += "io.circe" %% "circe-core" % "0.14.17",
-      generateModels                    := {
+      generateModels                    := Def.uncached {
         val dir  = (Compile / scalaSource).value / "io/github/nafg/mergify/models/generated"
         val file = dir / "Action.scala"
         IO.write(
@@ -89,10 +95,8 @@ lazy val plugin =
       sbtPlugin                     := true,
       pluginCrossBuild / sbtVersion := {
         scalaBinaryVersion.value match {
-          case "2.12" =>
-            sbtVersion.value
-          case "3" =>
-            "2.0.1"
+          case "2.12" => Sbt1
+          case "3"    => sbtVersion.value
         }
       },
       addSbtPlugin("com.github.sbt" % "sbt-github-actions" % "0.32.1"),
