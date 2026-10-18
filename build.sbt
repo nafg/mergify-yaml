@@ -1,7 +1,7 @@
 import _root_.io.github.nafg.mergify.dsl._
 
 val Scala212 = "2.12.21"
-val Scala213 = "2.13.18"
+val Scala213 = "3.10.0"
 val Scala3   = "3.9.0"
 
 // The sbt version the sbt 1 artifact is built against; the sbt 2 artifact
