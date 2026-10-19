@@ -2,7 +2,11 @@ import _root_.io.github.nafg.mergify.dsl._
 
 val Scala212 = "2.12.21"
 val Scala213 = "2.13.18"
-val Scala3   = "3.9.0"
+// The sbt 2 plugin and the Scala 3 libraries it depends on are loaded into
+// sbt's own build definition, which can't read code from a newer Scala than the
+// one sbt runs on. Taking the version this build definition runs on keeps them
+// in step with each sbt update, and gives Scala Steward no literal to bump.
+val Scala3   = scala.util.Properties.versionNumberString
 
 // The sbt version the sbt 1 artifact is built against; the sbt 2 artifact
 // follows whatever sbt is running this build.
