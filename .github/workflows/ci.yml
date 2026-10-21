@@ -49,6 +49,9 @@ jobs:
       - name: Build project
         run: sbt '++ ${{ matrix.scala }}; test'
 
+      - name: Run scripted tests
+        run: sbt '++ ${{ matrix.scala }}; plugin/scripted'
+
       - name: Compress target directories
         run: tar chf targets.tar target/out/jvm project/target
 

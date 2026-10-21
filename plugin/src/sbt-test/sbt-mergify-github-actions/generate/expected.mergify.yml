@@ -1,0 +1,14 @@
+defaults: {}
+queue_rules:
+  - name: default
+    merge_conditions: []
+pull_request_rules:
+  - name: Automatically merge successful Scala Steward PRs
+    conditions:
+      - or:
+          - author=scala-steward
+          - author=nafg-scala-steward[bot]
+      - check-success=Build and Test (ubuntu-latest, 2.13.18, temurin@17)
+    actions:
+        queue:
+            name: default

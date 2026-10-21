@@ -1,0 +1,3 @@
+> githubWorkflowGenerate
+$ exists .github/workflows/ci.yml
+$ must-mirror .mergify.yml expected.mergify.yml
