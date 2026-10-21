@@ -2,7 +2,12 @@ import _root_.io.github.nafg.mergify.dsl._
 
 val Scala212 = "2.12.21"
 val Scala213 = "2.13.18"
-val Scala3   = "3.9.0"
+val Scala3   = "3.3.8"
+
+// The Scala version this build definition runs on, which is sbt's own. The sbt 2 plugin has to be
+// compiled with it: it is built against sbt itself, and a Scala 3 compiler can't read code from a
+// newer one. Taking it from here also leaves Scala Steward no literal to bump past sbt's.
+val SbtScala = scala.util.Properties.versionNumberString
 
 // The sbt version the sbt 1 artifact is built against; the sbt 2 artifact
 // follows whatever sbt is running this build.
@@ -88,8 +93,10 @@ lazy val writer =
 //noinspection SpellCheckingInspection
 lazy val plugin =
   projectMatrix
-    .jvmPlatform(List(Scala212, Scala3))
-    .dependsOn(writer)
+    // Each row names the writer row it uses: rows only match automatically on an identical Scala
+    // version, and the sbt 2 row is on sbt's Scala while writer's Scala 3 row is on the LTS.
+    .jvmPlatform(List(Scala212), Nil, _.dependsOn(writer.jvm(Scala212)))
+    .jvmPlatform(List(SbtScala), Nil, _.dependsOn(writer.jvm(Scala3)))
     .enablePlugins(ScriptedPlugin)
     .settings(
       name                          := "sbt-mergify-github-actions",
