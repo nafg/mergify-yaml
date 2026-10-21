@@ -9,6 +9,7 @@ inThisBuild(
     dynverSonatypeSnapshots     := true,
     githubWorkflowJavaVersions  := Seq(JavaSpec.temurin("17")),
     githubWorkflowScalaVersions := List("2.12.x"),
+    githubWorkflowBuild += WorkflowStep.Sbt(List("plugin/scripted"), name = Some("Run scripted tests")),
     githubWorkflowTargetTags ++= Seq("v*"),
     githubWorkflowPublishTargetBranches := Seq(RefPredicate.StartsWith(Ref.Tag("v"))),
     githubWorkflowPublish               := Seq(

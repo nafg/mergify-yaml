@@ -90,6 +90,7 @@ lazy val plugin =
   projectMatrix
     .jvmPlatform(List(Scala212, Scala3))
     .dependsOn(writer)
+    .enablePlugins(ScriptedPlugin)
     .settings(
       name                          := "sbt-mergify-github-actions",
       sbtPlugin                     := true,
@@ -100,5 +101,11 @@ lazy val plugin =
         }
       },
       addSbtPlugin("com.github.sbt" % "sbt-github-actions" % "0.32.2"),
-      libraryDependencies += "org.scalameta" %% "munit" % "1.3.6" % Test
+      libraryDependencies += "org.scalameta" %% "munit" % "1.3.6" % Test,
+      scriptedLaunchOpts += s"-Dplugin.version=${version.value}",
+      scriptedBufferLog  := false,
+      // A test build resolves this plugin's dependencies on this build's other projects too
+      scriptedDependencies := scriptedDependencies
+        .dependsOn(publishLocal.all(ScopeFilter(inDependencies(ThisProject))))
+        .value
     )
