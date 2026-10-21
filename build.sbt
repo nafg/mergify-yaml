@@ -99,6 +99,6 @@ lazy val plugin =
           case "3"    => sbtVersion.value
         }
       },
-      addSbtPlugin("com.github.sbt" % "sbt-github-actions" % "0.32.1"),
+      addSbtPlugin("com.github.sbt" % "sbt-github-actions" % "0.32.2"),
       libraryDependencies += "org.scalameta" %% "munit" % "1.3.6" % Test
     )
