@@ -2,7 +2,7 @@ import _root_.io.github.nafg.mergify.dsl._
 
 val Scala212 = "2.12.21"
 val Scala213 = "2.13.18"
-val Scala3   = "3.3.8"
+val Scala3   = "3.3.9"
 
 // The Scala version this build definition runs on, which is sbt's own. The sbt 2 plugin has to be
 // compiled with it: it is built against sbt itself, and a Scala 3 compiler can't read code from a
@@ -110,7 +110,7 @@ lazy val plugin =
       addSbtPlugin("com.github.sbt" % "sbt-github-actions" % "0.32.2"),
       libraryDependencies += "org.scalameta" %% "munit" % "1.3.6" % Test,
       scriptedLaunchOpts += s"-Dplugin.version=${version.value}",
-      scriptedBufferLog  := false,
+      scriptedBufferLog := false,
       // A test build resolves this plugin's dependencies on this build's other projects too
       scriptedDependencies := scriptedDependencies
         .dependsOn(publishLocal.all(ScopeFilter(inDependencies(ThisProject))))
